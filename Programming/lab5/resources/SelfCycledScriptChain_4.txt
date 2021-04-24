@@ -1,0 +1,2 @@
+info
+execute_script C:\MyFiles\gitReps\ITMO\Programming\lab5\resources\SelfCycledScriptChain_2.txt

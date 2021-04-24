@@ -1,0 +1,3 @@
+info
+execute_script C:\MyFiles\gitReps\ITMO\Programming\lab5\resources\SelfCycledScriptExample.txt
+info
