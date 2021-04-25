@@ -4,7 +4,9 @@ import com.androsov.server.InternetConnection.ServerIO;
 import com.androsov.server.InternetConnection.SystemIOHandler;
 import com.androsov.server.productManagment.ListProductManager;
 import com.androsov.server.productManagment.ProductManager;
+import com.androsov.server.productManagment.exceptions.ContentException;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -14,12 +16,13 @@ public class Main {
         ProductManager manager = null;
         try {
             manager = new ListProductManager("LAB5_CONTENT", sio);
-        } catch (Exception e) {
-            System.out.println("no way");
+        } catch (IOException | ContentException e) {
+            System.out.println("Program start error: " + e.getMessage());
         }
 
         String line;
         Scanner sc = new Scanner(System.in);
+        System.out.println("-------------------------------------------------");
         System.out.println(manager.getCommandHandler().executeCommand("help"));
         System.out.println("-------------------------------------------------");
         System.out.println("Type command here:");

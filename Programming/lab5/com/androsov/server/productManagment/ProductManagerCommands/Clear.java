@@ -12,7 +12,7 @@ public class Clear extends ProductManagerCommand {
     }
 
     public String execute(String[] args) {
-        String result = "";
+        String result;
 
         manager.clear();
         result = "List was cleared";

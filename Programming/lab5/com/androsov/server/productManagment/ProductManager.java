@@ -3,7 +3,7 @@ package com.androsov.server.productManagment;
 import com.androsov.server.CommandMagment.CommandHandler;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.productManagment.exceptions.ContentException;
-import com.androsov.server.productManagment.exceptions.ManagmentException;
+import com.androsov.server.productManagment.exceptions.ManagementException;
 
 import java.io.IOException;
 
@@ -23,11 +23,11 @@ public interface ProductManager {
     boolean productExist(long id);
     void add(Product p) throws ContentException;
     void update(long id, Product p);
-    void removeById(long id) throws ManagmentException;
+    void removeById(long id) throws ManagementException;
     void clear();
-    void removeFirst() throws ManagmentException;
+    void removeFirst() throws ManagementException;
     void sort();
-    void removeAnyByManufactureCost(Float manufactureCost) throws ManagmentException;
+    void removeAnyByManufactureCost(Float manufactureCost) throws ManagementException;
     Float averageOfManufactureCost();
     int countByPrice(Integer price);
 }

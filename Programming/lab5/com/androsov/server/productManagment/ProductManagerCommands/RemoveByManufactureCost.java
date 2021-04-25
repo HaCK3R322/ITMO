@@ -2,7 +2,7 @@ package com.androsov.server.productManagment.ProductManagerCommands;
 
 import com.androsov.server.productManagment.ProductManager;
 import com.androsov.server.productManagment.ProductManagerCommands.Command.ProductManagerCommand;
-import com.androsov.server.productManagment.exceptions.ManagmentException;
+import com.androsov.server.productManagment.exceptions.ManagementException;
 
 public class RemoveByManufactureCost extends ProductManagerCommand {
     public RemoveByManufactureCost(ProductManager manager) {
@@ -22,7 +22,7 @@ public class RemoveByManufactureCost extends ProductManagerCommand {
                 manager.removeAnyByManufactureCost(cost);
             } catch (NumberFormatException e) {
                 result = "Wrong id format. Please enter long-format argument";
-            } catch (ManagmentException e) {
+            } catch (ManagementException e) {
                 result = "Removing exception: " + e.getMessage();
             }
         } else {

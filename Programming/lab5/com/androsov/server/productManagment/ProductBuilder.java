@@ -76,20 +76,16 @@ public class ProductBuilder {
                          Person owner) throws ContentException {
         Product product = null;
 
-        try {
-            product = buildProduct(idToAssign,
-                    name,
-                    coordinates,
-                    LocalDateTime.now(),
-                    price,
-                    partNumber,
-                    usedPartNumbers,
-                    manufactureCost,
-                    unitOfMeasure,
-                    owner);
-        } catch (Exception e) {
-            throw e;
-        }
+        product = buildProduct(idToAssign,
+                name,
+                coordinates,
+                LocalDateTime.now(),
+                price,
+                partNumber,
+                usedPartNumbers,
+                manufactureCost,
+                unitOfMeasure,
+                owner);
 
         return product;
     }

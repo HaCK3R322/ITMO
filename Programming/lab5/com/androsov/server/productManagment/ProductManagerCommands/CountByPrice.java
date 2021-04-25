@@ -2,7 +2,6 @@ package com.androsov.server.productManagment.ProductManagerCommands;
 
 import com.androsov.server.productManagment.ProductManager;
 import com.androsov.server.productManagment.ProductManagerCommands.Command.ProductManagerCommand;
-import com.androsov.server.productManagment.exceptions.WrongArgumentTypeException;
 
 public class CountByPrice extends ProductManagerCommand {
     public CountByPrice(ProductManager manager) {

@@ -2,7 +2,7 @@ package com.androsov.server.productManagment.ProductManagerCommands;
 
 import com.androsov.server.productManagment.ProductManager;
 import com.androsov.server.productManagment.ProductManagerCommands.Command.ProductManagerCommand;
-import com.androsov.server.productManagment.exceptions.ManagmentException;
+import com.androsov.server.productManagment.exceptions.ManagementException;
 
 public class RemoveFirst extends ProductManagerCommand {
     public RemoveFirst(ProductManager manager) {
@@ -18,7 +18,7 @@ public class RemoveFirst extends ProductManagerCommand {
 
         try {
             manager.removeFirst();
-        } catch (ManagmentException e) {
+        } catch (ManagementException e) {
             result = "Removing exception: " + e.getMessage();
         }
 

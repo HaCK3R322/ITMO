@@ -5,7 +5,6 @@ import com.androsov.server.productManagment.ProductManager;
 import com.androsov.server.productManagment.ProductManagerCommands.Command.ProductManagerCommand;
 import com.androsov.server.productManagment.exceptions.ContentException;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 
 public class UpdateById extends ProductManagerCommand {

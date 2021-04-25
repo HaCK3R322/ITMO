@@ -3,7 +3,6 @@ package com.androsov.client.userInterface.consoleUI;
 import com.androsov.client.InternetConnection.ClientIO;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class CommandLineInterface {

@@ -23,11 +23,11 @@ public class ExecuteScript extends ProductManagerCommand {
             Script script = new Script(scriptName);
 
             result += "script name: " + scriptName + '\n';
-            result += "commands size: " + script.commands.size() + '\n';
+            result += "lines number: " + script.commands.size() + '\n';
             result += "<start script execution>\n";
 
             for(int i = 0; i < script.commands.size(); i++) {
-                result += manager.getCommandHandler().executeCommand(script.getCommand()) + '\n';
+                result += manager.getCommandHandler().executeCommand(script.takeCommand()) + '\n';
             }
 
             result += "<script " + scriptName + " executed.>";
@@ -35,7 +35,7 @@ public class ExecuteScript extends ProductManagerCommand {
         } catch (NullPointerException e) {
             result = "Please, enter script name!";
         } catch (IOException | SelfCycledScriptChainException e) {
-            result = e.getMessage();
+            result = "<Script error>: " + e.getMessage();
         }
 
         return result;

@@ -2,17 +2,13 @@ package com.androsov.server.productManagment.ProductManagerCommands;
 
 import com.androsov.server.InternetConnection.ServerIO;
 import com.androsov.server.lab5Plains.*;
-import com.androsov.server.productManagment.ListProductManager;
 import com.androsov.server.productManagment.ProductBuilder;
 import com.androsov.server.productManagment.ProductManager;
 import com.androsov.server.productManagment.ProductManagerCommands.Command.ProductManagerCommand;
 import com.androsov.server.productManagment.exceptions.ContentException;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Scanner;
 
 public class Add extends ProductManagerCommand {
     ServerIO io;
@@ -26,7 +22,7 @@ public class Add extends ProductManagerCommand {
     }
 
     public String execute(String[] args) {
-        String result = "wery weird";
+        String result = "very weird";
 
         try {
             manager.add(manager.getProductBuilder().buildProduct(createProductManually(manager, this.io)));
@@ -58,7 +54,7 @@ public class Add extends ProductManagerCommand {
 
         double productX = 0; Double productY = null;
         statementNotPicked = true;
-        io.sendResponse("Enter coodinate x:");
+        io.sendResponse("Enter coordinate x:");
         while(statementNotPicked) {
             try {
                 productX = Double.parseDouble(io.getCommandLine());
@@ -71,7 +67,7 @@ public class Add extends ProductManagerCommand {
             }
         }
 
-        io.sendResponse("Enter coodinate y:");
+        io.sendResponse("Enter coordinate y:");
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
@@ -108,8 +104,10 @@ public class Add extends ProductManagerCommand {
             productPartNumber = io.getCommandLine();
             boolean partNumberAlreadyUsed = false;
             for(int i = 0; i < usedPartNumbers.size(); i++) {
-                if(productPartNumber.equals(usedPartNumbers.get(i)))
+                if (productPartNumber.equals(usedPartNumbers.get(i))) {
                     partNumberAlreadyUsed = true;
+                    break;
+                }
             }
             if(productPartNumber.replaceAll("\\s", "").equals("") || productPartNumber == null || partNumberAlreadyUsed)
                 io.sendResponse("Part number is empty or already used! Try again:");
@@ -217,152 +215,3 @@ public class Add extends ProductManagerCommand {
         return product;
     }
 }
-
-//manager.add(manager.getProductBuilder().buildProduct(createProductManually()));
-
-/*
-
-public Product createProductManually(List<String> commandList, int currentCommandLine) throws ContentException {
-        Product product = null;
-
-        try {
-            product = createProductManually(commandList, currentCommandLine, manager.getProductBuilder().idToAssign);
-        } catch (ContentException e) {
-            throw e;
-        }
-
-        return product;
-    }
-
-    public Product createProductManually(List<String> commandList, int currentCommandLine, long id) throws ContentException {
-        Product product;
-
-        currentCommandLine++;
-
-        String productName;
-        productName = commandList.get(currentCommandLine);
-        if(productName.replaceAll("\\s", "").equals("") || productName == null) {
-            throw new ContentException("Name is empty");
-        }
-        currentCommandLine++;
-
-        double productX = 0; Double productY = null;
-        try {
-            productX = Double.parseDouble(commandList.get(currentCommandLine));
-            if(productX > 653)
-                throw new ContentException("X bigger than 653");
-        } catch (NumberFormatException e) {
-            throw new ContentException("x missing");
-        }
-        currentCommandLine++;
-        try {
-            productY = new Double(commandList.get(currentCommandLine));
-            if(productY == null)
-                throw new ContentException("y = null");
-        } catch (NumberFormatException e) {
-            throw new ContentException("missing y coordinate");
-        }
-        currentCommandLine++;
-
-        Integer productPrice = null;
-        try {
-            productPrice = new Integer(commandList.get(currentCommandLine));
-            if(productPrice == 0)
-                throw new ContentException("price = 0");
-        } catch (NumberFormatException e) {
-            throw new ContentException("price missing");
-        }
-        currentCommandLine++;
-
-        String productPartNumber = null;
-        productPartNumber = commandList.get(currentCommandLine);
-        boolean partNumberAlreadyUsed = false;
-        for(int i = 0; i < usedPartNumbers.size(); i++) {
-            if(productPartNumber.equals(usedPartNumbers.get(i)))
-                partNumberAlreadyUsed = true;
-        }
-        if(productPartNumber.equals("") || productPartNumber == null || partNumberAlreadyUsed)
-            throw new ContentException("part number is empty or already used");
-        currentCommandLine++;
-
-
-        Float productManufactureCost = null;
-        try {
-            productManufactureCost = new Float(commandList.get(currentCommandLine));
-            if(productManufactureCost == null)
-                throw new ContentException("manufacture cost is null");
-        } catch (NumberFormatException e) {
-            throw new ContentException("manufacture cost missing");
-        }
-        currentCommandLine++;
-
-        UnitOfMeasure productUnitOfMeasure = null;
-        try {
-            productUnitOfMeasure = UnitOfMeasure.valueOf(commandList.get(currentCommandLine).toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ContentException("Wrong unit of measure statment statement, try again");
-        }
-        currentCommandLine++;
-
-        String ownerName = null;
-        long ownerHeight = 0;
-        Color ownerEyeColor = null;
-        Color ownerHairColor = null;
-        Country ownerNationality = null;
-
-        ownerName = commandList.get(currentCommandLine);
-        if(ownerName == null || ownerName.equals("")) {
-            throw new ContentException("Wrong owner name statement, try again");
-        }
-        currentCommandLine++;
-
-        try {
-            ownerHeight = Long.parseLong(commandList.get(currentCommandLine));
-            if(ownerHeight <= 0) {
-                throw new ContentException("Wrong statement, try again");
-            }
-        } catch (NumberFormatException e) {
-            throw new ContentException("Owner height missing");
-        }
-        currentCommandLine++;
-
-        try {
-            ownerEyeColor = Color.valueOf(commandList.get(currentCommandLine).toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ContentException("owner eye color missing or not supported");
-        }
-        currentCommandLine++;
-
-        try {
-            ownerHairColor = Color.valueOf(commandList.get(currentCommandLine).toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ContentException("owner hair color missing or not supported");
-        }
-        currentCommandLine++;
-
-        try {
-            ownerNationality = Country.valueOf(commandList.get(currentCommandLine).toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ContentException("owner nationality missing or not supported");
-        }
-
-        try {
-            product = new Product(id,
-                    productName,
-                    new Coordinates(productX, productY),
-                    LocalDateTime.now(),
-                    productPrice,
-                    productPartNumber,
-                    usedPartNumbers,
-                    productManufactureCost,
-                    productUnitOfMeasure,
-                    new Person(ownerName, ownerHeight, ownerEyeColor, ownerHairColor, ownerNationality)
-            );
-            System.out.println("Product added successfully!\n----------");
-        } catch (ContentException e) {
-            throw e;
-        }
-
-        return product;
-    }
- */

@@ -4,7 +4,6 @@ import com.androsov.server.CommandMagment.Command;
 import com.androsov.server.productManagment.ProductManager;
 import com.androsov.server.productManagment.ProductManagerCommands.Command.ProductManagerCommand;
 
-import java.util.List;
 import java.util.Map;
 
 public class Help extends ProductManagerCommand {

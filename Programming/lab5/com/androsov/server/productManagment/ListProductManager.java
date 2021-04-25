@@ -5,14 +5,12 @@ import com.androsov.server.InternetConnection.ServerIO;
 import com.androsov.server.productManagment.ProductManagerCommands.*;
 import com.androsov.server.productManagment.exceptions.ContentException;
 import com.androsov.server.lab5Plains.*;
-import com.androsov.server.productManagment.ProductBuilder;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import com.androsov.server.productManagment.exceptions.ManagmentException;
-import com.google.gson.*;
+import com.androsov.server.productManagment.exceptions.ManagementException;
 
 public class ListProductManager implements ProductManager{
 
@@ -52,6 +50,7 @@ public class ListProductManager implements ProductManager{
         try {
             file = new File(System.getenv(filePathEnv));
             deserialize();
+            System.out.println("List was deserialized from " + filePathEnv + ": " + System.getenv(filePathEnv));
         } catch (Exception e) {
             System.out.println("ListPMException: " + e.getMessage());
             throw e;
@@ -85,21 +84,13 @@ public class ListProductManager implements ProductManager{
     @Override
     public void deserialize() throws IOException, ContentException {
         ListDeserializer deserializer = new ListDeserializer(productBuilder);
-        try {
-            list = deserializer.deserealizeFromFile(file);
-        } catch (Exception e) {
-            throw e;
-        }
+        list = deserializer.deserializeFromFile(file);
     }
 
     @Override
     public void serialize() throws IOException {
         ListSerializer serializer = new ListSerializer();
-        try {
-            serializer.serializeListToFile(file, list);
-        } catch (Exception e) {
-            throw e;
-        }
+        serializer.serializeListToFile(file, list);
     }
 
     @Override
@@ -139,8 +130,10 @@ public class ListProductManager implements ProductManager{
         boolean exist = false;
 
         for(int i = 0; i < list.size(); i++) {
-            if(id == list.get(i).getId())
+            if (id == list.get(i).getId()) {
                 exist = true;
+                break;
+            }
         }
         return exist;
     }
@@ -168,7 +161,7 @@ public class ListProductManager implements ProductManager{
     }
 
     @Override
-    public void removeById(long id) throws ManagmentException {
+    public void removeById(long id) throws ManagementException {
         if(productExist(id)) {
             ListIterator<Product> iter = list.listIterator();
             Product p;
@@ -180,7 +173,7 @@ public class ListProductManager implements ProductManager{
                 }
             }
         } else {
-            throw new ManagmentException("No product with such id");
+            throw new ManagementException("No product with such id");
         }
     }
 
@@ -190,17 +183,17 @@ public class ListProductManager implements ProductManager{
     }
 
     @Override
-    public void removeFirst() throws ManagmentException {
+    public void removeFirst() throws ManagementException {
         if(list.size() > 0) {
             list.remove(0);
         } else {
-            throw new ManagmentException("List is empty");
+            throw new ManagementException("List is empty");
         }
     }
 
     @Override
     public void sort() {
-        Collections.sort(list, new Comparator<Product>() {
+        list.sort(new Comparator<Product>() {
             @Override
             public int compare(Product p1, Product p2) {
                 return p1.compareTo(p2);
@@ -210,23 +203,23 @@ public class ListProductManager implements ProductManager{
 
 
     @Override
-    public void removeAnyByManufactureCost(Float manufactureCost) throws ManagmentException {
+    public void removeAnyByManufactureCost(Float manufactureCost) throws ManagementException {
         boolean manufactureCost_exist = false;
         for(int i = 0; i < list.size(); i++) {
-            if(list.get(i).getManufactureCost() == manufactureCost) {
+            if(list.get(i).getManufactureCost().equals(manufactureCost)) {
                 list.remove(i);
                 manufactureCost_exist = true;
             }
         }
         if(!manufactureCost_exist)
-            throw new ManagmentException("No product with such id");
+            throw new ManagementException("No product with such id");
     }
 
     @Override
     public Float averageOfManufactureCost() {
         float average = 0;
         for(int i = 0; i < list.size(); i++) {
-            average += list.get(i).getManufactureCost().floatValue();
+            average += list.get(i).getManufactureCost();
         }
         average /= list.size();
         return average;
