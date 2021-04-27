@@ -16,8 +16,8 @@ public class Main {
         ProductManager manager = null;
         try {
             manager = new ListProductManager("LAB5_CONTENT", sio);
-        } catch (IOException | ContentException e) {
-            System.out.println("Program start error: " + e.getMessage());
+        } catch (IOException | NullPointerException | ContentException e) {
+            System.out.println("Program start error: " + e.getMessage() + "\nTry to reconfigure environment variables.");
         }
 
         String line;

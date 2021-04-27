@@ -23,7 +23,7 @@ public class ListProductManager implements ProductManager{
     /**
      * realization of ListProductManager for LinkedList collection and prepared for work
      */
-    public ListProductManager(String filePathEnv, ServerIO io) throws IOException, ContentException {
+    public ListProductManager(String filePathEnv, ServerIO io) throws IOException, ContentException, NullPointerException {
         list = new LinkedList<>();
         initDate = LocalDateTime.now();
 
