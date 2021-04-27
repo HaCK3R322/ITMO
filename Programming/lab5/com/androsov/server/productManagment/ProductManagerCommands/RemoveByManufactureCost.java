@@ -9,7 +9,7 @@ public class RemoveByManufactureCost extends ProductManagerCommand {
         super(manager);
 
         name = "remove_any_by_manufacture_cost";
-        description = "lol wf don't you understand?";
+        description = "-_-";
     }
 
     @Override

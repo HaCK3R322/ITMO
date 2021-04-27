@@ -56,6 +56,9 @@ public class Script {
             scriptCommands.add(line);
         }
 
+        bufferedReader.close();
+        reader.close();
+
         return scriptCommands;
     }
 
@@ -88,12 +91,10 @@ public class Script {
         for (String line : commandLines) {
             if (line.split(" ")[0].equals("execute_script")) {     // разделяем строку на слова, смотрим равно ли первое слово execute_script
                 if (line.split(" ").length > 1) {                 // смотрим есть ли имя у скрипта
-                    non_single.add(line.split(" ")[1]);          // добавляем в список всех ссылок на скрипты
+                    non_single.add(line.split(" ")[1]);          // добавляем в SET всех ссылок на скрипты
                 }
             }
         }
-
-        //добавляем их в сет, делаем из сета лист
 
 
         return new HashSet<>(non_single);

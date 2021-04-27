@@ -22,12 +22,8 @@ public class ExecuteScript extends ProductManagerCommand {
             String scriptName = args[0];
             Script script = new Script(scriptName);
 
-            result += "script name: " + scriptName + '\n';
-            result += "lines number: " + script.commands.size() + '\n';
-            result += "<start script execution>\n";
-
             for(int i = 0; i < script.commands.size(); i++) {
-                result += manager.getCommandHandler().executeCommand(script.takeCommand()) + '\n';
+                result += "script: " + manager.getCommandHandler().executeCommand(script.takeCommand()) + '\n';
             }
 
             result += "<script " + scriptName + " executed.>";

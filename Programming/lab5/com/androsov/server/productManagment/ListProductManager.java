@@ -46,15 +46,9 @@ public class ListProductManager implements ProductManager{
         commandHandler.registryCommand(new AverageOfManufactureCost(this));
         commandHandler.registryCommand(new CountByPrice(this));
 
-
-        try {
-            file = new File(System.getenv(filePathEnv));
-            deserialize();
-            System.out.println("List was deserialized from " + filePathEnv + ": " + System.getenv(filePathEnv));
-        } catch (Exception e) {
-            System.out.println("ListPMException: " + e.getMessage());
-            throw e;
-        }
+        file = new File(System.getenv(filePathEnv));
+        deserialize();
+        System.out.println("List was deserialized from " + filePathEnv + ": " + System.getenv(filePathEnv));
     }
 
     @Override

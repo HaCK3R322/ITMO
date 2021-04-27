@@ -7,7 +7,7 @@ public class AverageOfManufactureCost extends ProductManagerCommand {
     public AverageOfManufactureCost(ProductManager manager) {
         super(manager);
 
-        name = "count_by_manufacture_cost";
+        name = "average_of_manufacture_cost";
         description = "show average of manufacture cost.";
     }
 

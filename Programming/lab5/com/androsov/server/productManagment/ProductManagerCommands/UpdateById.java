@@ -14,7 +14,7 @@ public class UpdateById extends ProductManagerCommand {
         super(manager);
 
         name = "update_by_id";
-        description = "updates product with given id.";
+        description = "Manual product update with given id.";
 
         this.io = io;
     }
