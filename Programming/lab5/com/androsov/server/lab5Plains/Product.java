@@ -3,7 +3,6 @@ package com.androsov.server.lab5Plains;
 import com.androsov.server.productManagment.exceptions.ContentException;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Product implements Comparable<Product> {
     public Product(long id,

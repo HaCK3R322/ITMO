@@ -13,7 +13,7 @@ import java.util.List;
 
 
 public class ProductBuilder {
-    ProductBuilder() {
+    public ProductBuilder() {
         idToAssign = 1;
         usedPartNumbers = new LinkedList<>();
     }

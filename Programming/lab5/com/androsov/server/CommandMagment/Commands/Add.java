@@ -1,31 +1,33 @@
-package com.androsov.server.productManagment.ProductManagerCommands;
+package com.androsov.server.CommandMagment.Commands;
 
+import com.androsov.server.CommandMagment.ListCommand;
 import com.androsov.server.InternetConnection.ServerIO;
 import com.androsov.server.lab5Plains.*;
 import com.androsov.server.productManagment.ProductBuilder;
-import com.androsov.server.productManagment.ProductManager;
-import com.androsov.server.productManagment.ProductManagerCommands.Command.ProductManagerCommand;
 import com.androsov.server.productManagment.exceptions.ContentException;
 
 import java.io.IOException;
 import java.util.List;
 
-public class Add extends ProductManagerCommand {
+public class Add extends ListCommand {
     ServerIO io;
+    List<Product> list;
+    ProductBuilder productBuilder;
 
-    public Add(ProductManager manager, ServerIO io) {
-        super(manager);
+    public Add(List<Product> list, ProductBuilder productBuilder, ServerIO io) {
+        this.io = io;
+        this.list = list;
+        this.productBuilder = productBuilder;
 
         name = "add";
         description = "Manual step-by-step product creation.";
-        this.io = io;
     }
 
     public String execute(String[] args) {
         String result = "very weird";
 
         try {
-            manager.add(manager.getProductBuilder().buildProduct(createProductManually(manager, this.io)));
+            list.add(productBuilder.buildProduct(createProductManually(productBuilder, this.io)));
             result = "Product was added.";
         } catch (IOException e) {
             System.out.println("io " + e.getMessage());
@@ -36,7 +38,7 @@ public class Add extends ProductManagerCommand {
         return result;
     }
 
-    public static ProductBuilder.ProductImitator createProductManually(ProductManager manager, ServerIO io) throws IOException, ContentException {
+    public static ProductBuilder.ProductImitator createProductManually(ProductBuilder productBuilder, ServerIO io) throws IOException, ContentException {
         ProductBuilder.ProductImitator product = new ProductBuilder.ProductImitator();
 
         boolean statementNotPicked = true;
@@ -97,7 +99,7 @@ public class Add extends ProductManagerCommand {
         }
 
         String productPartNumber = null;
-        List<String> usedPartNumbers = manager.getProductBuilder().usedPartNumbers;
+        List<String> usedPartNumbers = productBuilder.usedPartNumbers;
         io.sendResponse("Enter part number:");
         statementNotPicked = true;
         while(statementNotPicked) {

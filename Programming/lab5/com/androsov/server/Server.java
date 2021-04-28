@@ -1,16 +1,9 @@
 package com.androsov.server;
 
-import com.androsov.server.InternetConnection.IOHandler;
-import com.androsov.server.InternetConnection.ServerIO;
-import com.androsov.server.productManagment.ListProductManager;
-import com.androsov.server.productManagment.ProductManager;
-import com.androsov.server.productManagment.exceptions.ContentException;
-
-import java.io.IOException;
-
 public class Server {
     public static void main(String[] args) {
-
+        // перенести все из Main сюда
+        /*
         ServerIO io = new IOHandler();
 
         try {
@@ -40,5 +33,6 @@ public class Server {
         } catch (ContentException e) {
             System.out.println("Content exception: " + e.getMessage());
         }
+         */
     }
 }

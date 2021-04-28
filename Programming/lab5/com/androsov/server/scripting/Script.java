@@ -2,7 +2,10 @@ package com.androsov.server.scripting;
 
 import com.androsov.server.productManagment.exceptions.SelfCycledScriptChainException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 /**

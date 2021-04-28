@@ -5,13 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
 public class ListSerializer {
-    public void serializeListToFile(File file, List<Product> list) throws IOException, NullPointerException {
+    public static void serializeListToFile(File file, List<Product> list) throws IOException, NullPointerException {
         try {
             FileOutputStream fostream = new FileOutputStream(file, false);
 
@@ -33,6 +32,8 @@ public class ListSerializer {
             String JSONFormatString = gson.toJson(productImitatorArray);
 
             fostream.write(JSONFormatString.getBytes());
+
+            fostream.close();
         } catch (Exception e) {
             throw e;
         }

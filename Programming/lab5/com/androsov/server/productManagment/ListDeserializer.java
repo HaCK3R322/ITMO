@@ -17,7 +17,7 @@ public class ListDeserializer {
         this.productBuilder = productBuilder;
     }
 
-    public List<Product> deserializeFromFile(File file) throws ContentException, NullPointerException, FileNotFoundException {
+    public final List<Product> deserializeFromFile(File file) throws ContentException, NullPointerException, FileNotFoundException {
         Gson gson = new Gson();
         List<Product> productList = new LinkedList<>();
 
