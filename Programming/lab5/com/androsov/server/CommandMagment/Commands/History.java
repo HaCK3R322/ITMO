@@ -2,15 +2,18 @@ package com.androsov.server.CommandMagment.Commands;
 
 import com.androsov.server.CommandMagment.CommandHandler;
 import com.androsov.server.CommandMagment.ListCommand;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
 
 public class History extends ListCommand {
     CommandHandler commandHandler;
+    MessengersHandler messenger;
 
-    public History(List<Product> list, CommandHandler commandHandler) {
+    public History(List<Product> list, CommandHandler commandHandler, MessengersHandler messenger) {
         this.list = list;
+        this.messenger = messenger;
 
         name = "history";
         description = "Shows 12 last used commands.";
@@ -18,7 +21,7 @@ public class History extends ListCommand {
 
     @Override
     public String execute(String[] args) {
-        String result = "history:\n";
+        String result = messenger.History().history + ":\n";
 
         int NUMBER_OF_LAST_COMMANDS_TO_SHOW = 12;
 
@@ -32,5 +35,10 @@ public class History extends ListCommand {
         }
 
         return result;
+    }
+
+    @Override
+    public String getDescription() {
+        return messenger.History().description;
     }
 }

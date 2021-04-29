@@ -1,7 +1,5 @@
 package com.androsov.server.lab5Plains;
 
-import com.androsov.server.productManagment.exceptions.ContentException;
-
 import java.time.LocalDateTime;
 
 public class Product implements Comparable<Product> {
@@ -13,7 +11,7 @@ public class Product implements Comparable<Product> {
                     String partNumber,
                     Float manufactureCost,
                     UnitOfMeasure unitOfMeasure,
-                    Person owner) throws ContentException {
+                    Person owner) {
         this.id = id;
         this.name = name;
         this.coordinates = coordinates;

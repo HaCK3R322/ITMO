@@ -1,6 +1,7 @@
 package com.androsov.server.CommandMagment.Commands;
 
 import com.androsov.server.CommandMagment.ListCommand;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.productManagment.ProductBuilder;
 
@@ -9,9 +10,11 @@ import java.util.ListIterator;
 
 public class RemoveById extends ListCommand {
     ProductBuilder productBuilder;
+    MessengersHandler messenger;
 
-    public RemoveById(List<Product> list) {
+    public RemoveById(List<Product> list, MessengersHandler messenger) {
         this.list = list;
+        this.messenger = messenger;
 
         name = "remove";
         description = "Removes product with given id.";
@@ -34,14 +37,19 @@ public class RemoveById extends ListCommand {
                         break;
                     }
                 }
-                result = "Product with id " + id + " was removed.";
+                result = messenger.RemoveById().Product_with_id + id + messenger.RemoveById().was_removed + ".";
             } catch (NumberFormatException e) {
-                result = "Wrong id format. Please enter long-format argument";
+                result = messenger.RemoveById().Wrong_id_format_Please_enter_long_format_argument;
             }
         } else {
-            result = "Please, enter id.";
+            result = messenger.RemoveById().Please_enter_id;
         }
 
         return result;
+    }
+
+    @Override
+    public String getDescription() {
+        return messenger.RemoveById().description;
     }
 }

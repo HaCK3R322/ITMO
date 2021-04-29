@@ -1,13 +1,17 @@
 package com.androsov.server.CommandMagment.Commands;
 
 import com.androsov.server.CommandMagment.ListCommand;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
 
 public class RemoveByManufactureCost extends ListCommand {
-    public RemoveByManufactureCost(List<Product> list) {
+    MessengersHandler messenger;
+
+    public RemoveByManufactureCost(List<Product> list, MessengersHandler messenger) {
         this.list = list;
+        this.messenger = messenger;
 
         name = "remove_any_by_manufacture_cost";
         description = "-_-";
@@ -26,12 +30,17 @@ public class RemoveByManufactureCost extends ListCommand {
                     }
                 }
             } catch (NumberFormatException e) {
-                result = "Wrong id format. Please enter long-format argument";
+                result = messenger.RemoveByManufactureCost().Wrong_id_format_Please_enter_long_format_argument;
             }
         } else {
-            result = "Please, enter cost.";
+            result = messenger.RemoveByManufactureCost().Please_enter_cost;
         }
 
         return result;
+    }
+
+    @Override
+    public String getDescription() {
+        return messenger.RemoveByManufactureCost().description;
     }
 }

@@ -2,6 +2,8 @@ package com.androsov.server.CommandMagment.Commands;
 
 import com.androsov.server.CommandMagment.ListCommand;
 import com.androsov.server.InternetConnection.ServerIO;
+import com.androsov.server.Messengers.Messenger;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.*;
 import com.androsov.server.productManagment.ProductBuilder;
 import com.androsov.server.productManagment.exceptions.ContentException;
@@ -13,22 +15,24 @@ public class Add extends ListCommand {
     ServerIO io;
     List<Product> list;
     ProductBuilder productBuilder;
+    MessengersHandler messenger;
 
-    public Add(List<Product> list, ProductBuilder productBuilder, ServerIO io) {
+    public Add(List<Product> list, ProductBuilder productBuilder, ServerIO io, MessengersHandler messenger) {
         this.io = io;
         this.list = list;
         this.productBuilder = productBuilder;
+        this.messenger = messenger;
 
         name = "add";
-        description = "Manual step-by-step product creation.";
+        description = messenger.Add().description;
     }
 
     public String execute(String[] args) {
-        String result = "very weird";
+        String result = "";
 
         try {
             list.add(productBuilder.buildProduct(createProductManually(productBuilder, this.io)));
-            result = "Product was added.";
+            result = messenger.Add().product_was_added;
         } catch (IOException e) {
             System.out.println("io " + e.getMessage());
         } catch (ContentException e) {
@@ -38,69 +42,74 @@ public class Add extends ListCommand {
         return result;
     }
 
-    public static ProductBuilder.ProductImitator createProductManually(ProductBuilder productBuilder, ServerIO io) throws IOException, ContentException {
+    @Override
+    public String getDescription() {
+        return messenger.Add().description;
+    }
+
+    public ProductBuilder.ProductImitator createProductManually(ProductBuilder productBuilder, ServerIO io) throws IOException, ContentException {
         ProductBuilder.ProductImitator product = new ProductBuilder.ProductImitator();
 
         boolean statementNotPicked = true;
 
         String productName = null;
-        io.sendResponse("Creation of new Product:\n----------\nenter name:");
+        io.sendResponse( messenger.Add().Creation_of_new_product + "\n----------\n" + messenger.Add().enter_name);
 
         while(statementNotPicked) {
             productName = io.getCommandLine();
             if(productName.replaceAll("\\s", "").equals("") || productName == null)
-                io.sendResponse("Name can not be empty. Try again:");
+                io.sendResponse(messenger.Add().Name_can_not_be_empty_try_again);
             else
                 statementNotPicked = false;
         }
 
         double productX = 0; Double productY = null;
         statementNotPicked = true;
-        io.sendResponse("Enter coordinate x:");
+        io.sendResponse(messenger.Add().Enter_coordinate_x);
         while(statementNotPicked) {
             try {
                 productX = Double.parseDouble(io.getCommandLine());
                 if(productX > 653)
-                    io.sendResponse("X coordinate can not be bigger than 653. Try again:");
+                    io.sendResponse(messenger.Add().X_coordinate_can_not_be_bigger_than_653_Try_again);
                 else
                     statementNotPicked = false;
             } catch (NumberFormatException e) {
-                io.sendResponse("Please enter double-format number:");
+                io.sendResponse(messenger.Add().Please_enter_double_format_number);
             }
         }
 
-        io.sendResponse("Enter coordinate y:");
+        io.sendResponse(messenger.Add().Enter_coordinate_y);
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
                 productY = new Double(io.getCommandLine());
                 if(productY == null)
-                    io.sendResponse("y is NULL");
+                    io.sendResponse(messenger.Add().y_is_NULL);
                 else
                     statementNotPicked = false;
             } catch (NumberFormatException e) {
-                io.sendResponse("Please enter double-format number:");
+                io.sendResponse(messenger.Add().Please_enter_double_format_number);
             }
         }
 
         Integer productPrice = null;
-        io.sendResponse("Enter price:");
+        io.sendResponse(messenger.Add().Enter_price);
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
                 productPrice = new Integer(io.getCommandLine());
                 if(productPrice == 0)
-                    io.sendResponse("Price can not be 0! Try again:");
+                    io.sendResponse(messenger.Add().Price_can_not_be_0_Try_again);
                 else
                     statementNotPicked = false;
             } catch (NumberFormatException e) {
-                io.sendResponse("Please enter int-format number:");
+                io.sendResponse(messenger.Add().Please_enter_int_format_number);
             }
         }
 
         String productPartNumber = null;
         List<String> usedPartNumbers = productBuilder.usedPartNumbers;
-        io.sendResponse("Enter part number:");
+        io.sendResponse(messenger.Add().Enter_part_number);
         statementNotPicked = true;
         while(statementNotPicked) {
             productPartNumber = io.getCommandLine();
@@ -112,7 +121,7 @@ public class Add extends ListCommand {
                 }
             }
             if(productPartNumber.replaceAll("\\s", "").equals("") || productPartNumber == null || partNumberAlreadyUsed)
-                io.sendResponse("Part number is empty or already used! Try again:");
+                io.sendResponse(messenger.Add().Part_number_is_empty_or_already_used_Try_again);
             else
                 statementNotPicked = false;
         }
@@ -120,28 +129,28 @@ public class Add extends ListCommand {
 
         Float productManufactureCost = null;
         statementNotPicked = true;
-        io.sendResponse("Enter manufacture cost:");
+        io.sendResponse(messenger.Add().Enter_manufacture_cost);
         while(statementNotPicked) {
             try {
                 productManufactureCost = new Float(io.getCommandLine());
                 if(productManufactureCost == null)
-                    io.sendResponse("Manufacture cost can not be NULL. Try again:");
+                    io.sendResponse(messenger.Add().Manufacture_cost_can_not_be_NULL_Try_again);
                 else
                     statementNotPicked = false;
             } catch (NumberFormatException e) {
-                io.sendResponse("Please enter float-format number:");
+                io.sendResponse(messenger.Add().Please_enter_float_format_number);
             }
         }
 
         UnitOfMeasure productUnitOfMeasure = null;
-        io.sendResponse("enter unit of measure:");
+        io.sendResponse(messenger.Add().Enter_unit_of_measure);
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
                 productUnitOfMeasure = UnitOfMeasure.valueOf(io.getCommandLine().toUpperCase());
                 statementNotPicked = false;
             } catch (IllegalArgumentException e) {
-                io.sendResponse("That type of measure doesn't supports. Supported units: GRAMS, KILOGRAMS, SQUARE_METERS. Try again:");
+                io.sendResponse(messenger.Add().That_type_of_measure_doesnt_supports_Supported_units_GRAMS_KILOGRAMS_SQUARE_METERS_Try_again);
             }
         }
 
@@ -151,58 +160,58 @@ public class Add extends ListCommand {
         Color ownerHairColor = null;
         Country ownerNationality = null;
 
-        io.sendResponse("Enter owners name:");
+        io.sendResponse(messenger.Add().Enter_owners_name);
         statementNotPicked = true;
         while(statementNotPicked) {
             ownerName = io.getCommandLine();
             if(ownerName == null || ownerName.replaceAll("\\s", "").equals("")) {
-                io.sendResponse("Owners name cant be empty. Try again:");
+                io.sendResponse(messenger.Add().Owners_name_can_not_be_empty_Try_again);
             } else {
                 statementNotPicked = false;
             }
         }
-        io.sendResponse("Enter owners height:");
+        io.sendResponse(messenger.Add().Enter_owners_height);
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
                 ownerHeight = Long.parseLong(io.getCommandLine());
                 if(ownerHeight <= 0) {
-                    io.sendResponse("Owners height cant be zero or negative. Try again:");
+                    io.sendResponse(messenger.Add().Owners_height_cant_be_zero_or_negative_Try_again);
                 } else {
                     statementNotPicked = false;
                 }
             } catch (NumberFormatException e) {
-                io.sendResponse("Please enter long-format number:");
+                io.sendResponse(messenger.Add().Please_enter_long_format_number);
             }
         }
-        io.sendResponse("Enter owner eye color:");
+        io.sendResponse(messenger.Add().Enter_owner_eye_color);
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
                 ownerEyeColor = Color.valueOf(io.getCommandLine().toUpperCase());
                 statementNotPicked = false;
             } catch (IllegalArgumentException e) {
-                io.sendResponse("That type of color doesn't supports. Supported colors: BLUE, GREEN, BLACK, ORANGE, WHITE, BROWN. Try again:");
+                io.sendResponse(messenger.Add().That_type_of_color_doesnt_supports_Supported_colors_BLUE_GREEN_BLACK_ORANGE_WHITE_BROWN_Try_again);
             }
         }
-        io.sendResponse("Enter owner hair color:");
+        io.sendResponse(messenger.Add().Enter_owner_hair_color);
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
                 ownerHairColor = Color.valueOf(io.getCommandLine().toUpperCase());
                 statementNotPicked = false;
             } catch (IllegalArgumentException e) {
-                io.sendResponse("Wrong statement, try again");
+                io.sendResponse(messenger.Add().That_type_of_color_doesnt_supports_Supported_colors_BLUE_GREEN_BLACK_ORANGE_WHITE_BROWN_Try_again);
             }
         }
-        io.sendResponse("Enter owner nationality:");
+        io.sendResponse(messenger.Add().Enter_owner_nationality);
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
                 ownerNationality = Country.valueOf(io.getCommandLine().toUpperCase());
                 statementNotPicked = false;
             } catch (IllegalArgumentException e) {
-                io.sendResponse("Wrong statement, try again");
+                io.sendResponse(messenger.Add().Wrong_statement_try_again);
             }
         }
 

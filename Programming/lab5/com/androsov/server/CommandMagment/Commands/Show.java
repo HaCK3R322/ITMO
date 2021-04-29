@@ -1,13 +1,17 @@
 package com.androsov.server.CommandMagment.Commands;
 
 import com.androsov.server.CommandMagment.ListCommand;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
 
 public class Show extends ListCommand {
-    public Show(List<Product> list) {
+    MessengersHandler messenger;
+
+    public Show(List<Product> list, MessengersHandler messenger) {
         this.list = list;
+        this.messenger = messenger;
 
         name = "show";
         description = "gives info about each product.";
@@ -23,5 +27,10 @@ public class Show extends ListCommand {
         }
 
         return result;
+    }
+
+    @Override
+    public String getDescription() {
+        return messenger.Save().description;
     }
 }

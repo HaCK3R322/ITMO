@@ -8,10 +8,9 @@ public abstract class ListCommand implements Command {
     public List<Product> list;
 
     public String name;
-    public String description;
+    protected String description;
 
     public String getName() {
         return name;
     }
-    public String getDescription() {return description; }
 }

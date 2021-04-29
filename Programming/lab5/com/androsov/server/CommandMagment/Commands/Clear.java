@@ -1,13 +1,17 @@
 package com.androsov.server.CommandMagment.Commands;
 
 import com.androsov.server.CommandMagment.ListCommand;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
 
 public class Clear extends ListCommand {
-    public Clear(List<Product> list) {
+    MessengersHandler messenger;
+
+    public Clear(List<Product> list, MessengersHandler messenger) {
         this.list = list;
+        this.messenger = messenger;
 
         name = "clear";
         description = "deletes all products from collection.";
@@ -17,8 +21,13 @@ public class Clear extends ListCommand {
         String result;
 
         list.clear();
-        result = "List was cleared";
+        result = messenger.Clear().result;
 
         return result;
+    }
+
+    @Override
+    public String getDescription() {
+        return messenger.Clear().description;
     }
 }

@@ -2,6 +2,7 @@ package com.androsov.server.CommandMagment.Commands;
 
 import com.androsov.server.CommandMagment.CommandHandler;
 import com.androsov.server.CommandMagment.ListCommand;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.productManagment.exceptions.SelfCycledScriptChainException;
 import com.androsov.server.scripting.Script;
@@ -11,10 +12,12 @@ import java.util.List;
 
 public class ExecuteScript extends ListCommand {
     CommandHandler commandHandler;
+    MessengersHandler messenger;
 
-    public ExecuteScript(List<Product> list, CommandHandler commandHandler) {
+    public ExecuteScript(List<Product> list, CommandHandler commandHandler, MessengersHandler messenger) {
         this.list = list;
         this.commandHandler = commandHandler;
+        this.messenger = messenger;
 
         name = "execute_script";
         description = "executes script. Command format: execute_script <path to script>.";
@@ -28,17 +31,22 @@ public class ExecuteScript extends ListCommand {
             Script script = new Script(scriptName);
 
             for(int i = 0; i < script.commands.size(); i++) {
-                result += "script: " + commandHandler.executeCommand(script.takeCommand()) + '\n';
+                result += messenger.ExecuteScript().script + ": " + commandHandler.executeCommand(script.takeCommand()) + '\n';
             }
 
-            result += "<script " + scriptName + " executed.>";
+            result += "<" + messenger.ExecuteScript().script + scriptName + messenger.ExecuteScript().executed + ".>";
 
         } catch (NullPointerException e) {
-            result = "Please, enter script name!";
+            result = messenger.ExecuteScript().Please_enter_script_name;
         } catch (IOException | SelfCycledScriptChainException e) {
-            result = "<Script error>: " + e.getMessage();
+            result = "<" + messenger.ExecuteScript().Script_error + ">: " + e.getMessage();
         }
 
         return result;
+    }
+
+    @Override
+    public String getDescription() {
+        return messenger.ExecuteScript().description;
     }
 }

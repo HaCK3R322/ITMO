@@ -4,6 +4,7 @@ import com.androsov.server.CommandMagment.CommandHandler;
 import com.androsov.server.CommandMagment.Commands.*;
 import com.androsov.server.InternetConnection.ServerIO;
 import com.androsov.server.InternetConnection.SystemIOHandler;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.productManagment.ListDeserializer;
 import com.androsov.server.productManagment.ListSerializer;
@@ -48,37 +49,41 @@ public class Main {
             initializationTime = LocalDateTime.now();
         }
 
+        MessengersHandler messengersHandler = new MessengersHandler();
+
         CommandHandler commandHandler = new CommandHandler();
-        commandHandler.registryCommand(new Add(list, productBuilder, sio));
-        commandHandler.registryCommand(new AverageOfManufactureCost(list));
-        commandHandler.registryCommand(new Clear(list));
-        commandHandler.registryCommand(new CountByPrice(list));
-        commandHandler.registryCommand(new ExecuteScript(list, commandHandler));
-        commandHandler.registryCommand(new Help(list, commandHandler));
-        commandHandler.registryCommand(new History(list, commandHandler));
-        commandHandler.registryCommand(new Info(list, initializationTime));
-        commandHandler.registryCommand(new RemoveById(list));
-        commandHandler.registryCommand(new RemoveByManufactureCost(list));
-        commandHandler.registryCommand(new RemoveFirst(list));
-        commandHandler.registryCommand(new Save(list, lab5ContentFile));
-        commandHandler.registryCommand(new Show(list));
-        commandHandler.registryCommand(new Sort(list));
-        commandHandler.registryCommand(new UpdateById(list, productBuilder, sio));
+        commandHandler.registryCommand(new ChangeLanguage(messengersHandler));
+        commandHandler.registryCommand(new Add(list, productBuilder, sio, messengersHandler));
+        commandHandler.registryCommand(new AverageOfManufactureCost(list, messengersHandler));
+        commandHandler.registryCommand(new Clear(list, messengersHandler));
+        commandHandler.registryCommand(new CountByPrice(list, messengersHandler));
+        commandHandler.registryCommand(new ExecuteScript(list, commandHandler, messengersHandler));
+        commandHandler.registryCommand(new Help(list, commandHandler, messengersHandler));
+        commandHandler.registryCommand(new History(list, commandHandler, messengersHandler));
+        commandHandler.registryCommand(new Info(list, initializationTime, messengersHandler));
+        commandHandler.registryCommand(new RemoveById(list, messengersHandler));
+        commandHandler.registryCommand(new RemoveByManufactureCost(list, messengersHandler));
+        commandHandler.registryCommand(new RemoveFirst(list, messengersHandler));
+        commandHandler.registryCommand(new Save(list, lab5ContentFile, messengersHandler));
+        commandHandler.registryCommand(new Show(list, messengersHandler));
+        commandHandler.registryCommand(new Sort(list, messengersHandler));
+        commandHandler.registryCommand(new UpdateById(list, productBuilder, sio, messengersHandler));
+        commandHandler.registryCommand(new Exit(messengersHandler));
 
         String line;
         Scanner sc = new Scanner(System.in);
-        System.out.println("-------------------------------------------------");
+        System.out.println("-------------------------------------------------\n");
         System.out.println(commandHandler.executeCommand("help"));
         System.out.println("-------------------------------------------------");
         System.out.println("Type command here:");
         boolean stop = false;
         while (!stop) {
             line = sc.nextLine();
-            if(!line.equals("exit")) {
-                System.out.println(commandHandler.executeCommand(line));
-            } else {
+            String result = commandHandler.executeCommand(line);
+            if(result != "\0")
+                System.out.println(result);
+            else
                 stop = true;
-            }
         }
     }
 }

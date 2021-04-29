@@ -1,13 +1,17 @@
 package com.androsov.server.CommandMagment.Commands;
 
 import com.androsov.server.CommandMagment.ListCommand;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
 
 public class CountByPrice extends ListCommand {
-    public CountByPrice(List<Product> list) {
+    MessengersHandler messenger;
+
+    public CountByPrice(List<Product> list, MessengersHandler messenger) {
         this.list = list;
+        this.messenger = messenger;
 
         name = "count_by_price";
         description = "Shows how many products have that price.";
@@ -26,11 +30,16 @@ public class CountByPrice extends ListCommand {
                 }
                 result += count;
             } catch (NumberFormatException e) {
-                result = "Wrong number format. Try again.";
+                result = messenger.CountByPrice().Wrong_number_format;
             }
         else
-            result = "Please, enter argument (Format: <command> <argument>)";
+            result = messenger.CountByPrice().Please_enter_argument;
 
         return result;
+    }
+
+    @Override
+    public String getDescription() {
+        return messenger.CountByPrice().description;
     }
 }

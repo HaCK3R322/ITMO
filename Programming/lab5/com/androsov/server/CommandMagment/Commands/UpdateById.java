@@ -1,7 +1,9 @@
 package com.androsov.server.CommandMagment.Commands;
 
+import com.androsov.server.CommandMagment.CommandHandler;
 import com.androsov.server.CommandMagment.ListCommand;
 import com.androsov.server.InternetConnection.ServerIO;
+import com.androsov.server.Messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.productManagment.ProductBuilder;
 import com.androsov.server.productManagment.exceptions.ContentException;
@@ -12,11 +14,17 @@ import java.util.List;
 public class UpdateById extends ListCommand {
     ServerIO io;
     ProductBuilder productBuilder;
+    MessengersHandler messenger;
 
-    public UpdateById(List<Product> list, ProductBuilder productBuilder, ServerIO io) {
+    Add add;
+
+    public UpdateById(List<Product> list, ProductBuilder productBuilder, ServerIO io, MessengersHandler messenger) {
         this.list = list;
         this.productBuilder = productBuilder;
         this.io = io;
+        this.messenger = messenger;
+
+        add = new Add(list, productBuilder, io, messenger);
 
         name = "update_by_id";
         description = "Manual product update with given id.";
@@ -41,24 +49,29 @@ public class UpdateById extends ListCommand {
 
                 for(int i = 0; i < list.size(); i++) {
                     if(list.get(i).getId() == id) {
-                        list.set(i, productBuilder.buildProduct(Add.createProductManually(productBuilder, io), id));
+                        list.set(i, productBuilder.buildProduct(add.createProductManually(productBuilder, io), id));
                         break;
                     }
                 }
 
-                result = "Product was updated.";
+                result = messenger.UpdateById().Product_was_updated;
             } catch (NumberFormatException e) {
-                result = "Wrong id format. Please enter long-format argument";
+                result = messenger.UpdateById().Wrong_id_format_Enter_long;
             } catch (ContentException e) {
-                result = "Product build exception: " + e.getMessage();
+                result = messenger.UpdateById().Build_exception + ": " + e.getMessage();
             } catch (IOException e) {
                 result = "IOException: " + e.getMessage();
             }
 
         } else {
-            result = "Please, enter id.";
+            result = messenger.UpdateById().Please_enter_id;
         }
 
         return result;
+    }
+
+    @Override
+    public String getDescription() {
+        return messenger.UpdateById().description;
     }
 }
