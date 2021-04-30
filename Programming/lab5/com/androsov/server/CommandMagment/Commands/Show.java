@@ -20,10 +20,14 @@ public class Show extends ListCommand {
     public String execute(String[] args) {
         String result = "";
 
-        for(int i = 0; i < list.size(); i++) {
-            result += list.get(i).toString();
-            if(i != list.size() - 1)
-                result += "\n";
+        if(list.size() > 0) {
+            for(int i = 0; i < list.size(); i++) {
+                result += list.get(i).toString();
+                if(i != list.size() - 1)
+                    result += "\n";
+            }
+        } else {
+            result = "|list is empty|";
         }
 
         return result;
@@ -31,6 +35,6 @@ public class Show extends ListCommand {
 
     @Override
     public String getDescription() {
-        return messenger.Save().description;
+        return messenger.Show().description;
     }
 }

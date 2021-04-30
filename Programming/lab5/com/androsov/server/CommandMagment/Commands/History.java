@@ -14,6 +14,7 @@ public class History extends ListCommand {
     public History(List<Product> list, CommandHandler commandHandler, MessengersHandler messenger) {
         this.list = list;
         this.messenger = messenger;
+        this.commandHandler = commandHandler;
 
         name = "history";
         description = "Shows 12 last used commands.";

@@ -1,5 +1,7 @@
 package com.androsov.server.Messengers;
 
+import java.lang.reflect.Field;
+
 public class Eng extends Messenger {
     public Eng() {
         add.description = "Manual step-by-step product creation.";
@@ -22,14 +24,17 @@ public class Eng extends Messenger {
         add.Please_enter_float_format_number = "Please enter float-format number:";
         add.Enter_unit_of_measure = "Enter unit of measure";
         add.That_type_of_measure_doesnt_supports_Supported_units_GRAMS_KILOGRAMS_SQUARE_METERS_Try_again = "That type of measure doesn't supports. Supported units: GRAMS, KILOGRAMS, SQUARE_METERS. Try again:";
-        add.Enter_owners_name = "Enter_owners_name";
+        add.Enter_owners_name = "Enter owners name";
         add.Owners_name_can_not_be_empty_Try_again = "Owners name cant be empty. Try again:";
         add.Enter_owners_height = "Enter owners height:";
+        add.Please_enter_long_format_number = "Please, enter long-format number:";
         add.Enter_owner_eye_color = "Enter owner eye color:";
         add.That_type_of_color_doesnt_supports_Supported_colors_BLUE_GREEN_BLACK_ORANGE_WHITE_BROWN_Try_again = "That type of color doesn't supports. Supported colors: BLUE, GREEN, BLACK, ORANGE, WHITE, BROWN. Try again:";
         add.Enter_owner_hair_color = "Enter owner hair color:";
         add.Enter_owner_nationality = "Enter owner nationality";
         add.That_type_of_nationality_doesnt_supports_Supported_nationality_GERMANY_THAILAND_JAPAN_Try_again = "That type of nationality doesnt supports Supported nationalities: GERMANY, THAILAND, JAPAN, Try again:";
+
+        averageOfManufactureCost.description = "shows average of manufacture cost.";
 
         clear.description = "deletes all products from collection.";
         clear.result = "List was cleared!";
@@ -46,7 +51,7 @@ public class Eng extends Messenger {
 
         exit.description = "Ends session.";
 
-        help.description = "If used without an argument, returns a list of commands with a description, otherwise displays help for this command.";
+        help.description = "If used without an argument, returns a list of commands with a description, otherwise displays help for that commands.";
         help.doesnt_have_description = "<doesnt have description>";
 
         history.description = "Shows 12 last used commands.";

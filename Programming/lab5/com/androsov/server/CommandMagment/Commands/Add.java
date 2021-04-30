@@ -211,7 +211,7 @@ public class Add extends ListCommand {
                 ownerNationality = Country.valueOf(io.getCommandLine().toUpperCase());
                 statementNotPicked = false;
             } catch (IllegalArgumentException e) {
-                io.sendResponse(messenger.Add().Wrong_statement_try_again);
+                io.sendResponse(messenger.Add().That_type_of_nationality_doesnt_supports_Supported_nationality_GERMANY_THAILAND_JAPAN_Try_again);
             }
         }
 

@@ -26,9 +26,6 @@ public class Help extends ListCommand {
 
         String result = "";
 
-        result += "list of languages: " + messenger.getAllLangsNames() + "\n\n";
-
-
         if(args.length != 0)
         {
             for (String arg: args) {
@@ -37,9 +34,13 @@ public class Help extends ListCommand {
 
             result = result.substring(0, result.length() - 1);
         } else {
+            result += "list of languages: " + messenger.getAllLangsNames() + "\n\n";
             for(Map.Entry<String, Command> commandEntry : commandHandler.commandMap.entrySet()) {
                 try {
-                    result += commandEntry.getKey() + ": " + commandEntry.getValue().getDescription() + "\n";
+                    if(!commandEntry.getValue().getDescription().equals(null))
+                        result += commandEntry.getKey() + ": " + commandEntry.getValue().getDescription() + "\n";
+                    else
+                        result += messenger.Help().doesnt_have_description;
                 } catch (NullPointerException e) {
                     result += commandEntry.getKey() + ": " + messenger.Help().doesnt_have_description;
                 }

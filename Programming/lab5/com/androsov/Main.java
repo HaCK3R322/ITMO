@@ -27,7 +27,6 @@ public class Main {
 
         ProductBuilder productBuilder = new ProductBuilder();
         ListDeserializer deserializer = new ListDeserializer(productBuilder);
-        ListSerializer serializer = new ListSerializer();
         List<Product> list;
         LocalDateTime initializationTime;
         try {

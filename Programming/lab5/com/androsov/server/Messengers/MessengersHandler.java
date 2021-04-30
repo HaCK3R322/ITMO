@@ -1,6 +1,5 @@
 package com.androsov.server.Messengers;
 
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,9 +73,7 @@ public class MessengersHandler {
     public Messenger.Save Save() {
         return messenger.save;
     }
-    public Messenger.Show Show() {
-        return messenger.show;
-    }
+    public Messenger.Show Show() { return messenger.show; }
     public Messenger.Sort Sort() {
         return messenger.sort;
     }

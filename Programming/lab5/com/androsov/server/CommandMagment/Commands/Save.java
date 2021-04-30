@@ -26,11 +26,21 @@ public class Save extends ListCommand {
     public String execute(String[] args) {
         String result = "";
 
-        try {
-            ListSerializer.serializeListToFile(file, list);
-            result = messenger.Save().saved;
-        } catch (IOException e) {
-            result = "IOException while saving: " + e.getMessage();
+        if(args.length == 0) {
+            try {
+                ListSerializer.serializeListToFile(file, list);
+                result = messenger.Save().saved;
+            } catch (IOException e) {
+                result = "IOException while saving: " + e.getMessage();
+            }
+        } else {
+            try {
+                File fileToSave = new File(args[0]);
+                ListSerializer.serializeListToFile(fileToSave, list);
+                result = messenger.Save().saved;
+            } catch (IOException e) {
+                result = "IOException while saving: " + e.getMessage();
+            }
         }
 
         return result;

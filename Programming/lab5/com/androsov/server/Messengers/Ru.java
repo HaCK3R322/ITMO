@@ -25,6 +25,7 @@ public class Ru extends Messenger {
         add.Enter_owners_name = "Введите имя владельца:";
         add.Owners_name_can_not_be_empty_Try_again = "Имя владельца не может быть пустым. Попробуйте ещё.";
         add.Enter_owners_height = "Введите рост владельца:";
+        add.Please_enter_long_format_number = "Пожалуйста введите число в формате long";
         add.Enter_owner_eye_color = "Введите цвет глаз владельца:";
         add.That_type_of_color_doesnt_supports_Supported_colors_BLUE_GREEN_BLACK_ORANGE_WHITE_BROWN_Try_again = "Такой цвет не поддерживается. Поддерживаемые цвета: BLUE, GREEN, BLACK, ORANGE, WHITE, BROWN. Попробуйте ещё.";
         add.Enter_owner_hair_color = "Введите цвет волос владельца:";
@@ -48,7 +49,7 @@ public class Ru extends Messenger {
 
         exit.description = "Заканчивает работу программы.";
 
-        help.description = "Если введена без аргумента, выводит список всех команд с их описанием. В ином случае выводит команду с её описанием.";
+        help.description = "Если введена без аргумента, выводит список всех команд с их описанием. В ином случае выводит запрошенные команды с их описанием.";
         help.doesnt_have_description = "<не имеет описания>";
 
         history.description = "Выводит последние 12 использованных команд.";

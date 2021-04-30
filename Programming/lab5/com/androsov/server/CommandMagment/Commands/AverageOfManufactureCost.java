@@ -22,10 +22,12 @@ public class AverageOfManufactureCost extends ListCommand implements Command {
         String result = "";
 
         float average = 0;
-        for(int i = 0; i < list.size(); i++) {
-            average += list.get(i).getManufactureCost();
+        if(list.size() > 0) {
+            for(int i = 0; i < list.size(); i++) {
+                average += list.get(i).getManufactureCost();
+            }
+            average /= list.size();
         }
-        average /= list.size();
 
         result += average;
 
