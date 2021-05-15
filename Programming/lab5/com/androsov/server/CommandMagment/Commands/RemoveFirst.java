@@ -1,13 +1,14 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
 
 public class RemoveFirst extends ListCommand {
     MessengersHandler messenger;
+    List<Product> list;
 
     public RemoveFirst(List<Product> list, MessengersHandler messenger) {
         this.list = list;
@@ -15,6 +16,8 @@ public class RemoveFirst extends ListCommand {
 
         name = "remove_first";
         description = "removes first element of collection.";
+        argumentFormat = "void";
+        userAccessible = true;
     }
 
     @Override

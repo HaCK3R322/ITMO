@@ -1,9 +1,7 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
-
-import java.awt.*;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 
 public class Exit extends ListCommand {
     MessengersHandler messenger;
@@ -13,6 +11,8 @@ public class Exit extends ListCommand {
 
         name = "exit";
         description = "ends session.";
+        argumentFormat = "void";
+        userAccessible = true;
     }
 
     @Override

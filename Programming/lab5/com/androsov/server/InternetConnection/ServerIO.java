@@ -1,4 +1,4 @@
-package com.androsov.server.InternetConnection;
+package com.androsov.server.internetConnection;
 
 import java.io.IOException;
 

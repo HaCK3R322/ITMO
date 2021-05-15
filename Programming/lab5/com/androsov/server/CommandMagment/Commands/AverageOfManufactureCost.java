@@ -1,14 +1,15 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.Command;
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
+import com.androsov.server.commandMagment.Command;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
 
 public class AverageOfManufactureCost extends ListCommand implements Command {
     MessengersHandler messenger;
+    List<Product> list;
 
     public AverageOfManufactureCost(List<Product> list, MessengersHandler messenger) {
         this.list = list;
@@ -16,18 +17,19 @@ public class AverageOfManufactureCost extends ListCommand implements Command {
 
         name = "average_of_manufacture_cost";
         description = "show average of manufacture cost.";
+        argumentFormat = "void";
+        userAccessible = true;
     }
 
     public String execute(String[] args) {
         String result = "";
 
         float average = 0;
-        if(list.size() > 0) {
-            for(int i = 0; i < list.size(); i++) {
-                average += list.get(i).getManufactureCost();
-            }
-            average /= list.size();
-        }
+
+        average = (float)list.stream()
+                .map(Product::getManufactureCost)
+                .mapToDouble(cost -> cost)
+                .sum();
 
         result += average;
 

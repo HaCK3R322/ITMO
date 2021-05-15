@@ -1,8 +1,7 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.Messenger;
-import com.androsov.server.Messengers.MessengersHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 
 public class ChangeLanguage extends ListCommand {
     MessengersHandler messenger;
@@ -12,6 +11,8 @@ public class ChangeLanguage extends ListCommand {
 
         name = "change_language";
         description = "changes language.";
+        argumentFormat = "String";
+        userAccessible = true;
     }
 
     public String execute(String[] args) {

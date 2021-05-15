@@ -1,9 +1,8 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.InternetConnection.ServerIO;
-import com.androsov.server.Messengers.Messenger;
-import com.androsov.server.Messengers.MessengersHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.internetConnection.ServerIO;
+import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.*;
 import com.androsov.server.productManagment.ProductBuilder;
 import com.androsov.server.productManagment.exceptions.ContentException;
@@ -25,6 +24,8 @@ public class Add extends ListCommand {
 
         name = "add";
         description = messenger.Add().description;
+        argumentFormat = "void";
+        userAccessible = true;
     }
 
     public String execute(String[] args) {

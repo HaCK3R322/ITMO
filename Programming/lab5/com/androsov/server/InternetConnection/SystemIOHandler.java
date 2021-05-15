@@ -1,4 +1,4 @@
-package com.androsov.server.InternetConnection;
+package com.androsov.server.internetConnection;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -12,8 +12,7 @@ public class SystemIOHandler implements ServerIO {
     @Override
     public String getCommandLine() throws IOException {
         Scanner sc = new Scanner(System.in);
-        String line = sc.nextLine();
-        return line;
+        return sc.nextLine();
     }
 
     @Override

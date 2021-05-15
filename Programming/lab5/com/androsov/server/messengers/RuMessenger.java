@@ -1,7 +1,10 @@
-package com.androsov.server.Messengers;
+package com.androsov.server.messengers;
 
-public class Ru extends Messenger {
-    public Ru() {
+public class RuMessenger extends Messenger {
+    static final RuMessenger INSTANCE = new RuMessenger();
+    public static RuMessenger getInstance() { return INSTANCE; }
+
+    private RuMessenger() {
         add.description = "Ручное создание и добавление продука.";
         add.product_was_added = "Продукт был добавлен!";
         add.Creation_of_new_product = "Создание нового продукта";

@@ -1,26 +1,25 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.CommandHandler;
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
-import com.androsov.server.lab5Plains.Product;
+import com.androsov.server.commandMagment.CommandHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.productManagment.exceptions.SelfCycledScriptChainException;
 import com.androsov.server.scripting.Script;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ExecuteScript extends ListCommand {
     CommandHandler commandHandler;
     MessengersHandler messenger;
 
-    public ExecuteScript(List<Product> list, CommandHandler commandHandler, MessengersHandler messenger) {
-        this.list = list;
+    public ExecuteScript(CommandHandler commandHandler, MessengersHandler messenger) {
         this.commandHandler = commandHandler;
         this.messenger = messenger;
 
         name = "execute_script";
         description = "executes script. Command format: execute_script <path to script>.";
+        argumentFormat = "String";
+        userAccessible = true;
     }
 
     public String execute(String[] args) {

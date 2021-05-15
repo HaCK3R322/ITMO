@@ -1,7 +1,7 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.productManagment.ProductBuilder;
 
@@ -11,15 +11,20 @@ import java.util.ListIterator;
 public class RemoveById extends ListCommand {
     ProductBuilder productBuilder;
     MessengersHandler messenger;
+    List<Product> list;
 
     public RemoveById(List<Product> list, MessengersHandler messenger) {
         this.list = list;
         this.messenger = messenger;
 
-        name = "remove";
+        name = "remove_by_id";
         description = "Removes product with given id.";
+        argumentFormat = "Long";
+        userAccessible = true;
     }
 
+
+    // какой-то баг, надо исправить!
     @Override
     public String execute(String[] args) {
         String result = "";

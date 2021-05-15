@@ -1,25 +1,24 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.Command;
-import com.androsov.server.CommandMagment.CommandHandler;
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
-import com.androsov.server.lab5Plains.Product;
+import com.androsov.server.commandMagment.Command;
+import com.androsov.server.commandMagment.CommandHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 
-import java.util.List;
 import java.util.Map;
 
 public class Help extends ListCommand {
     CommandHandler commandHandler;
     MessengersHandler messenger;
 
-    public Help(List<Product> list, CommandHandler commandHandler, MessengersHandler messenger) {
-        this.list = list;
+    public Help(CommandHandler commandHandler, MessengersHandler messenger) {
         this.commandHandler = commandHandler;
         this.messenger = messenger;
 
         name = "help";
         description = "If used without an argument, returns a list of commands with a description, otherwise displays help for this command";
+        argumentFormat = "String|void";
+        userAccessible = true;
     }
 
     public String execute(String[] args) {
@@ -36,14 +35,8 @@ public class Help extends ListCommand {
         } else {
             result += "list of languages: " + messenger.getAllLangsNames() + "\n\n";
             for(Map.Entry<String, Command> commandEntry : commandHandler.commandMap.entrySet()) {
-                try {
-                    if(!commandEntry.getValue().getDescription().equals(null))
-                        result += commandEntry.getKey() + ": " + commandEntry.getValue().getDescription() + "\n";
-                    else
-                        result += messenger.Help().doesnt_have_description;
-                } catch (NullPointerException e) {
-                    result += commandEntry.getKey() + ": " + messenger.Help().doesnt_have_description;
-                }
+                if(commandEntry.getValue().isUserAccessible())
+                    result += commandEntry.getKey() + ": " + commandEntry.getValue().getDescription() + "\n";
             }
         }
 

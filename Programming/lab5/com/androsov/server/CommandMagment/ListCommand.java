@@ -1,16 +1,15 @@
-package com.androsov.server.CommandMagment;
-
-import com.androsov.server.lab5Plains.Product;
-
-import java.util.List;
+package com.androsov.server.commandMagment;
 
 public abstract class ListCommand implements Command {
-    public List<Product> list;
-
     public String name;
-    protected String description;
+    public String description;
+    public String argumentFormat;
+    public boolean userAccessible;
 
     public String getName() {
         return name;
     }
+    public abstract String getDescription();
+    public boolean isUserAccessible() { return userAccessible; }
+    public String getArgumentFormat() { return argumentFormat; }
 }

@@ -1,11 +1,7 @@
-package com.androsov.server.Messengers;
-
-import com.sun.istack.internal.NotNull;
-
-import java.lang.reflect.Field;
+package com.androsov.server.messengers;
 
 public abstract class Messenger {
-    Messenger() {
+    protected Messenger() {
         add = new Add();
         averageOfManufactureCost = new AverageOfManufactureCost();
         clear = new Clear();
@@ -24,7 +20,7 @@ public abstract class Messenger {
         updateById = new UpdateById();
     }
 
-    public class Add {
+    public static class Add {
         public String description,
                 product_was_added,
                 Creation_of_new_product,
@@ -59,26 +55,26 @@ public abstract class Messenger {
     }
     Add add;
 
-    public class AverageOfManufactureCost {
+    public static class AverageOfManufactureCost {
         public String description;
 
     }
     AverageOfManufactureCost averageOfManufactureCost;
 
-    public class Clear {
+    public static class Clear {
         public String description,
         result;
     }
     Clear clear;
 
-    public class CountByPrice {
+    public static class CountByPrice {
         public String description,
         Wrong_number_format,
         Please_enter_argument;
     }
     CountByPrice countByPrice;
 
-    public class ExecuteScript {
+    public static class ExecuteScript {
         public String description,
         script,
         executed,
@@ -87,24 +83,24 @@ public abstract class Messenger {
     }
     ExecuteScript executeScript;
 
-    public class Exit {
+    public static class Exit {
         public String description;
     }
     Exit exit;
 
-    public class Help {
+    public static class Help {
         public String description,
         doesnt_have_description;
     }
     Help help;
 
-    public class History {
+    public static class History {
         public String description,
         history;
     }
     History history;
 
-    public class Info {
+    public static class Info {
         public String description,
         Collection_info,
         type_Linked_list,
@@ -113,7 +109,7 @@ public abstract class Messenger {
     }
     Info info;
 
-    public class RemoveById {
+    public static class RemoveById {
         public String description,
         Product_with_id,
         was_removed,
@@ -122,14 +118,14 @@ public abstract class Messenger {
     }
     RemoveById removeById;
 
-    public class RemoveByManufactureCost {
+    public static class RemoveByManufactureCost {
         public String description,
         Wrong_id_format_Please_enter_long_format_argument,
         Please_enter_cost;
     }
     RemoveByManufactureCost removeByManufactureCost;
 
-    public class RemoveFirst {
+    public static class RemoveFirst {
         public String description,
         Product_with_id,
         was_removed,
@@ -137,24 +133,24 @@ public abstract class Messenger {
     }
     RemoveFirst removeFirst;
 
-    public class Save {
+    public static class Save {
         public String description,
         saved;
     }
     Save save;
 
-    public class Show {
+    public static class Show {
         public String description;
     }
     Show show;
 
-    public class Sort {
+    public static class Sort {
         public String description,
         Sorted;
     }
     Sort sort;
 
-    public class UpdateById {
+    public static class UpdateById {
         public String description,
         Product_was_updated,
         Wrong_id_format_Enter_long,

@@ -1,7 +1,7 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.time.LocalDateTime;
@@ -10,6 +10,7 @@ import java.util.List;
 public class Info extends ListCommand {
     LocalDateTime initializationTime;
     MessengersHandler messenger;
+    List<Product> list;
 
     public Info(List<Product> list, LocalDateTime initializationTime, MessengersHandler messenger) {
         this.list = list;
@@ -18,6 +19,8 @@ public class Info extends ListCommand {
 
         name = "info";
         description = "gives some info about the hole collection.";
+        argumentFormat = "void";
+        userAccessible = true;
     }
 
     public String execute(String[] args) {

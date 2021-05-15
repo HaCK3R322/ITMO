@@ -1,9 +1,10 @@
-package com.androsov.server.Messengers;
+package com.androsov.server.messengers;
 
-import java.lang.reflect.Field;
+public class EngMessenger extends Messenger {
+    static final EngMessenger INSTANCE = new EngMessenger();
+    public static EngMessenger getInstance() { return INSTANCE; }
 
-public class Eng extends Messenger {
-    public Eng() {
+    private EngMessenger() {
         add.description = "Manual step-by-step product creation.";
         add.product_was_added = "Product was added successfully!";
         add.Creation_of_new_product = "Creation of new Product";

@@ -1,7 +1,7 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.productManagment.ListSerializer;
 
@@ -12,6 +12,7 @@ import java.util.List;
 public class Save extends ListCommand {
     File file;
     MessengersHandler messenger;
+    List<Product> list;
 
     public Save(List<Product> list, File file, MessengersHandler messenger) {
         this.list = list;
@@ -20,6 +21,8 @@ public class Save extends ListCommand {
 
         name = "save";
         description = "Saves collection.";
+        argumentFormat = "void";
+        userAccessible = false;
     }
 
     @Override

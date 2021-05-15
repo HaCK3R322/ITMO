@@ -1,13 +1,14 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
 
 public class CountByPrice extends ListCommand {
     MessengersHandler messenger;
+    List<Product> list;
 
     public CountByPrice(List<Product> list, MessengersHandler messenger) {
         this.list = list;
@@ -15,6 +16,8 @@ public class CountByPrice extends ListCommand {
 
         name = "count_by_price";
         description = "Shows how many products have that price.";
+        argumentFormat = "Integer";
+        userAccessible = true;
     }
 
     public String execute(String[] args) {
@@ -24,10 +27,13 @@ public class CountByPrice extends ListCommand {
             try {
                 Integer price = Integer.parseInt(args[0]);
                 int count = 0;
-                for(int i = 0; i < list.size(); i++) {
-                    if(list.get(i).getPrice().equals(price))
-                        count++;
-                }
+
+                count += list.stream()
+                        .map(Product::getPrice)
+                        .filter(i -> i.equals(price))
+                        .mapToInt(i -> i)
+                        .count();
+
                 result += count;
             } catch (NumberFormatException e) {
                 result = messenger.CountByPrice().Wrong_number_format;

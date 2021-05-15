@@ -1,13 +1,14 @@
-package com.androsov.server.CommandMagment.Commands;
+package com.androsov.server.commandMagment.commands;
 
-import com.androsov.server.CommandMagment.ListCommand;
-import com.androsov.server.Messengers.MessengersHandler;
+import com.androsov.server.commandMagment.ListCommand;
+import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
 
 public class Show extends ListCommand {
     MessengersHandler messenger;
+    List<Product> list;
 
     public Show(List<Product> list, MessengersHandler messenger) {
         this.list = list;
@@ -15,6 +16,8 @@ public class Show extends ListCommand {
 
         name = "show";
         description = "gives info about each product.";
+        argumentFormat = "void";
+        userAccessible = true;
     }
 
     public String execute(String[] args) {

@@ -1,4 +1,4 @@
-package com.androsov.server.Messengers;
+package com.androsov.server.messengers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,10 +11,10 @@ public class MessengersHandler {
     public MessengersHandler() {
         messengers = new HashMap<>();
 
-        messengers.put("Ru", new Ru());
-        messengers.put("Eng", new Eng());
+        messengers.put("ru", RuMessenger.getInstance());
+        messengers.put("eng", EngMessenger.getInstance());
 
-        messenger = messengers.get("Eng");
+        messenger = messengers.get("eng");
     }
 
     public String changeLanguage(String lang) {

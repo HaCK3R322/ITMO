@@ -1,4 +1,4 @@
-package com.androsov.server.CommandMagment;
+package com.androsov.server.commandMagment;
 
 public class CommandFormatter {
     public static String getName(String commandLine) {

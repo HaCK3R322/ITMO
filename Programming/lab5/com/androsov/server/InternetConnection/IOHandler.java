@@ -1,4 +1,4 @@
-package com.androsov.server.InternetConnection;
+package com.androsov.server.internetConnection;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,9 +14,8 @@ public class IOHandler implements ServerIO {
 
     public IOHandler() {
         try {
-            serverSocket = new ServerSocket(0);
+            serverSocket = new ServerSocket(25565);
             System.out.println("Server io handler opened on address " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
-            accept();
         } catch (Exception e)  {
             System.out.println("Server io handler exception: " + e.getMessage());
         }
