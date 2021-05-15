@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Razer Mouse",
+    "coordinates": {
+      "x": 100.0,
+      "y": 100.0
+    },
+    "price": 10000,
+    "partNumber": "1",
+    "manufactureCost": 10.0,
+    "unitOfMeasure": "GRAMS",
+    "owner": {
+      "name": "Ivan Androsov",
+      "height": 183,
+      "eyeColor": "BROWN",
+      "hairColor": "BROWN",
+      "nationality": "GERMANY"
+    }
+  },
+  {
+    "name": "Gamer Girl Bathwater",
+    "coordinates": {
+      "x": 100.0,
+      "y": 100.0
+    },
+    "price": 999999,
+    "partNumber": "2",
+    "manufactureCost": 0.0,
+    "unitOfMeasure": "GRAMS",
+    "owner": {
+      "name": "Ivan Androsov",
+      "height": 183,
+      "eyeColor": "BROWN",
+      "hairColor": "BROWN",
+      "nationality": "GERMANY"
+    }
+  }
+]
