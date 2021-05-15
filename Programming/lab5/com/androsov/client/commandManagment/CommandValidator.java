@@ -19,7 +19,7 @@ public class CommandValidator {
 
         toClassMap = new HashMap<>();
         toClassMap.put("void", null);
-        toClassMap.put("String", String.class); // сделать что бы хелп выводился // а конкретно переделать Class -> Class[] и добавлять массивы соответсвующих классов
+        toClassMap.put("String", String.class);
 
         toClassMap.put("Integer", Long.class);
         toClassMap.put("Long", Long.class);
