@@ -5,7 +5,7 @@ public class EngMessenger extends Messenger {
     public static EngMessenger getInstance() { return INSTANCE; }
 
     private EngMessenger() {
-        add.description = "Manual step-by-step product creation.";
+        add.description = "product creation from arguments: <name><coordinate x><coordinate y><price><part number><manufacture cost><unit of measure><owner name><owner height><owner eye color><owner hair color><nationality>.";
         add.product_was_added = "Product was added successfully!";
         add.Creation_of_new_product = "Creation of new Product";
         add.enter_name = "enter name:";

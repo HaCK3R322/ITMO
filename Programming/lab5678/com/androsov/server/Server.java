@@ -2,6 +2,7 @@ package com.androsov.server;
 
 import com.androsov.server.commandMagment.CommandHandler;
 import com.androsov.server.commandMagment.commands.*;
+import com.androsov.server.internetConnection.AsyncIOHandler;
 import com.androsov.server.internetConnection.IOHandler;
 import com.androsov.server.internetConnection.ServerIO;
 import com.androsov.server.lab5Plains.Product;
@@ -21,7 +22,9 @@ public class Server {
         File lab5ContentFile;
 
 
-        ServerIO io = new IOHandler();
+        AsyncIOHandler asyncIO = new AsyncIOHandler();
+        IOHandler syncIO = new IOHandler();
+        ServerIO io = asyncIO;
 
         ProductBuilder productBuilder = new ProductBuilder();
         ListDeserializer deserializer = new ListDeserializer(productBuilder);
@@ -51,7 +54,7 @@ public class Server {
         CommandHandler commandHandler = new CommandHandler();
 
         commandHandler.registryCommand(new ChangeLanguage(messengersHandler));
-        commandHandler.registryCommand(new Add(list, productBuilder, io, messengersHandler));
+        commandHandler.registryCommand(new Add(list, productBuilder, messengersHandler));
         commandHandler.registryCommand(new AverageOfManufactureCost(list, messengersHandler));
         commandHandler.registryCommand(new Clear(list, messengersHandler));
         commandHandler.registryCommand(new CountByPrice(list, messengersHandler));
@@ -65,7 +68,7 @@ public class Server {
         commandHandler.registryCommand(new Save(list, lab5ContentFile, messengersHandler));
         commandHandler.registryCommand(new Show(list, messengersHandler));
         commandHandler.registryCommand(new Sort(list, messengersHandler));
-        commandHandler.registryCommand(new UpdateById(list, productBuilder, io, messengersHandler));
+        commandHandler.registryCommand(new UpdateById(list, productBuilder, messengersHandler));
         commandHandler.registryCommand(new Exit(messengersHandler));
 
         commandHandler.registryCommand(new GetCommandsFormats(commandHandler));
@@ -75,22 +78,35 @@ public class Server {
         io.accept();
 
         String commandLine;
-        boolean stop = false;
-
-
-        while (!stop) {
+        while (true) {
             try {
-                commandLine = io.getCommandLine();
-                String result = commandHandler.executeCommand(commandLine);
-                if(result != "\0")
-                    io.sendResponse(result);
-                else
-                    stop = true;
+                asyncIO.selector.select();
+                asyncIO.configureKeys();
+                while (asyncIO.nextKey()) {
+                    io.accept();
+                    commandLine = io.getCommandLine();
+                    io.sendResponse(commandHandler.executeCommand(commandLine));
+                    asyncIO.removeCurrentKey();
+                }
             } catch (IOException e) {
-                System.out.println("IOException: " + e.getMessage());
-                io.accept();
+                System.out.println(e.getMessage());
             }
         }
+
+
+//        while (!stop) {
+//            try {
+//                commandLine = io.getCommandLine();
+//                String result = commandHandler.executeCommand(commandLine);
+//                if(result != "\0")
+//                    io.sendResponse(result);
+//                else
+//                    stop = true;
+//            } catch (IOException e) {
+//                System.out.println("IOException: " + e.getMessage());
+//                io.accept();
+//            }
+//        }
         //commandHandler.executeCommand("save");
     }
 }

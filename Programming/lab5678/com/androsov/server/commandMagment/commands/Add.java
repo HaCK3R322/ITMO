@@ -11,32 +11,50 @@ import java.io.IOException;
 import java.util.List;
 
 public class Add extends ListCommand {
-    ServerIO io;
     List<Product> list;
     ProductBuilder productBuilder;
     MessengersHandler messenger;
 
-    public Add(List<Product> list, ProductBuilder productBuilder, ServerIO io, MessengersHandler messenger) {
-        this.io = io;
+    public Add(List<Product> list, ProductBuilder productBuilder, MessengersHandler messenger) {
         this.list = list;
         this.productBuilder = productBuilder;
         this.messenger = messenger;
 
         name = "add";
         description = messenger.Add().description;
-        argumentFormat = "void";
+        argumentFormat = "String";
         userAccessible = true;
     }
 
+    /**
+     * args:
+     *0 - name
+     *1 - coordinate x
+     *2 - coordinate y
+     *3 - price
+     *4 - part number
+     *5 - manufacture cost
+     *6 - unit of measure
+     *7 - owner name
+     *8 - owner height
+     *9 - owner eye color
+     *10 - owner hair color
+     *11 - nationality
+     * @param args
+     * @return
+     */
     public String execute(String[] args) {
         String result = "";
 
         try {
-            list.add(productBuilder.buildProduct(createProductManually(productBuilder, this.io)));
+            //list.add(productBuilder.buildProduct(createProductManually(productBuilder, this.io))); // not working in current time
+
+            ProductBuilder.ProductImitator productImitator = createProductManually(args);
+
+            list.add(productBuilder.buildProduct(productImitator));
             result = messenger.Add().product_was_added;
-        } catch (IOException e) {
-            System.out.println("io " + e.getMessage());
         } catch (ContentException e) {
+            result = "Product build failed: " + e.getMessage();
             System.out.println("Content exception: " + e.getMessage());
         }
 
@@ -46,6 +64,38 @@ public class Add extends ListCommand {
     @Override
     public String getDescription() {
         return messenger.Add().description;
+    }
+
+    public ProductBuilder.ProductImitator createProductManually(String[] args) throws ContentException {
+        Person person;
+
+        try {
+            String name = args[7];
+            long height = Long.parseLong(args[8]);
+            Color eyeColor = Color.valueOf(args[9]);
+            Color hairColor = Color.valueOf(args[10]);
+            Country country = Country.valueOf(args[11]);
+
+            person = new Person(name, height, eyeColor, hairColor, country);
+        } catch (NumberFormatException | NullPointerException e) {
+            throw new ContentException("Some owner states are wrong; Check your states;");
+        }
+
+        ProductBuilder.ProductImitator productImitator = new ProductBuilder.ProductImitator();
+
+        try {
+            productImitator.name = args[0];
+            productImitator.coordinates = new Coordinates(Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+            productImitator.price = Integer.parseInt(args[3]);
+            productImitator.partNumber = args[4];
+            productImitator.manufactureCost = Float.parseFloat(args[5]);
+            productImitator.unitOfMeasure = UnitOfMeasure.valueOf(args[6]);
+            productImitator.owner = person;
+        } catch (NumberFormatException | NullPointerException e) {
+            throw new ContentException("Some states are wrong; Check your states;");
+        }
+
+        return productImitator;
     }
 
     public ProductBuilder.ProductImitator createProductManually(ProductBuilder productBuilder, ServerIO io) throws IOException, ContentException {
@@ -83,7 +133,7 @@ public class Add extends ListCommand {
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
-                productY = new Double(io.getCommandLine());
+                productY = Double.parseDouble(io.getCommandLine());
                 if(productY == null)
                     io.sendResponse(messenger.Add().y_is_NULL);
                 else
@@ -98,7 +148,7 @@ public class Add extends ListCommand {
         statementNotPicked = true;
         while(statementNotPicked) {
             try {
-                productPrice = new Integer(io.getCommandLine());
+                productPrice = Integer.parseInt(io.getCommandLine());
                 if(productPrice == 0)
                     io.sendResponse(messenger.Add().Price_can_not_be_0_Try_again);
                 else
@@ -133,7 +183,7 @@ public class Add extends ListCommand {
         io.sendResponse(messenger.Add().Enter_manufacture_cost);
         while(statementNotPicked) {
             try {
-                productManufactureCost = new Float(io.getCommandLine());
+                productManufactureCost = Float.parseFloat(io.getCommandLine());
                 if(productManufactureCost == null)
                     io.sendResponse(messenger.Add().Manufacture_cost_can_not_be_NULL_Try_again);
                 else
