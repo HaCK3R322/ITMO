@@ -77,7 +77,7 @@ public class Add extends ListCommand {
             Country country = Country.valueOf(args[11]);
 
             person = new Person(name, height, eyeColor, hairColor, country);
-        } catch (NumberFormatException | NullPointerException e) {
+        } catch (NullPointerException | IllegalArgumentException e) {
             throw new ContentException("Some owner states are wrong; Check your states;");
         }
 

@@ -28,7 +28,7 @@ public class AsyncIOHandler implements ServerIO {
             selector = Selector.open();
 
             server = ServerSocketChannel.open();
-            server.bind(new InetSocketAddress("localhost", 27015));
+            server.bind(new InetSocketAddress("localhost", 25565));
             server.configureBlocking(false);
             server.register(selector, SelectionKey.OP_ACCEPT);
         } catch (IOException e) {
@@ -48,6 +48,7 @@ public class AsyncIOHandler implements ServerIO {
     public boolean nextKey() {
         if(keyIterator.hasNext()) {
             currentKey = keyIterator.next();
+            System.out.println("current key: " + currentKey.toString());
             return true;
         } else {
             return false;
@@ -59,8 +60,12 @@ public class AsyncIOHandler implements ServerIO {
         try {
             if (currentKey.isAcceptable()) {
                 final SocketChannel client = server.accept();
-                client.configureBlocking(false);
-                client.register(selector, SelectionKey.OP_READ);
+                if(client != null) {
+                    client.configureBlocking(false);
+                    client.register(selector, SelectionKey.OP_READ);
+
+                    System.out.println("Connected client " + client.socket().getInetAddress().toString());
+                }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -82,22 +87,23 @@ public class AsyncIOHandler implements ServerIO {
         } else {
             result = "wait";
         }
+        System.out.println("got command: " + result);
         return result;
     }
 
     @Override
     public void sendResponse(String line) throws IOException {
-        if(!line.equals("wait")) {
-            final ByteArrayOutputStream output = new ByteArrayOutputStream();
-            try (DataOutputStream os = new DataOutputStream(output)) {
-                os.writeUTF(line);
-            }
+        currentChannel = (SocketChannel) currentKey.channel();
 
-            buffer.clear();
-            buffer.put(output.toByteArray());
-            buffer.position(0);
-            currentChannel.write(buffer);
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (DataOutputStream os = new DataOutputStream(output)) {
+            os.writeUTF(line);
         }
+
+        buffer.clear();
+        buffer.put(output.toByteArray());
+        buffer.position(0);
+        currentChannel.write(buffer);
     }
 
     public void removeCurrentKey() {

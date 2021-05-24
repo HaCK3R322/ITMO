@@ -73,9 +73,11 @@ public class Server {
 
         commandHandler.registryCommand(new GetCommandsFormats(commandHandler));
 
-        System.out.println(commandHandler.executeCommand("get_commands"));
+        System.out.println("----------");
+        System.out.println(commandHandler.executeCommand("get_commands_formats"));
+        System.out.println("----------");
 
-        io.accept();
+        //io.accept();
 
         String commandLine;
         while (true) {
@@ -85,8 +87,10 @@ public class Server {
                 while (asyncIO.nextKey()) {
                     io.accept();
                     commandLine = io.getCommandLine();
-                    io.sendResponse(commandHandler.executeCommand(commandLine));
-                    asyncIO.removeCurrentKey();
+                    if(!commandLine.equals("wait")) {
+                        io.sendResponse(commandHandler.executeCommand(commandLine));
+                        asyncIO.removeCurrentKey();
+                    }
                 }
             } catch (IOException e) {
                 System.out.println(e.getMessage());

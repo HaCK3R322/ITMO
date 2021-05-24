@@ -5,65 +5,81 @@ import com.androsov.client.internetConnection.ClientIO;
 import com.androsov.client.messenger.EngMessenger;
 import com.androsov.client.messenger.Messenger;
 import com.androsov.client.messenger.RuMessenger;
+import com.androsov.client.userInterface.Ui;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-public class CommandLineInterface {
+public class CommandLineInterface implements Ui {
     ClientIO io;
-    Scanner scanner;
-    CommandValidator validator;
+    final private Scanner scanner = new Scanner(System.in);
+    final CommandValidator validator;
     Messenger messenger;
 
-
-    public CommandLineInterface(ClientIO io, CommandValidator validator, Messenger messenger) {
+    public CommandLineInterface(ClientIO io, Messenger messenger) throws IOException {
         this.io = io;
-        scanner = new Scanner(System.in);
-        this.validator = validator;
         this.messenger = messenger;
+
+        io.sendCommandLine("get_commands_formats");
+        validator = new CommandValidator(io.getResponse());
     }
 
     /**
      * основной цикл запросов и ответов на сервер и от сервера
      * @throws IOException
      */
-    public void startListen() throws IOException {
+    @Override
+    public void init() throws IOException {
         io.sendCommandLine("help");
         System.out.println(io.getResponse());
         System.out.println("-------------------------------------------------");
         System.out.println("Type command here:");
 
-        String command = getUserCommand();
-        while(!command.equals("exit")) {
+        while(true) {
+            //get new user command from System.in
+            String command = getCommand();
+
+            if(command.equals("exit"))
+                break;
+
+            //if command not void
             if(command.split(" ").length > 0) {
                 if(!command.split(" ")[0].equals("change_language")) {
+
+                    //send command - print response
                     if(validator.isValid(command)) {
                         io.sendCommandLine(command);
                         System.out.println(io.getResponse());
                     } else {
                         System.out.println(messenger.Wrong_command_or_command_format_try_again());
                     }
+
                 } else {
                     if(command.split(" ").length > 1) {
                         messenger = changeLanguage(command.split(" ")[1]);
                     } else {
                         System.out.println("Please enter new language: ");
-                        messenger = changeLanguage(getUserCommand());
+                        messenger = changeLanguage(getCommand());
                     }
                     io.sendCommandLine(command);
                     System.out.println(io.getResponse());
                 }
-                command = getUserCommand();
-            } else {
-                System.out.println(messenger.voidSpace());
             }
         }
     }
 
-    public String getUserCommand() {
-        return scanner.nextLine();
+    @Override
+    public String getCommand() { return scanner.nextLine();  }
+
+    @Override
+    public void sendResponse(String str) { System.out.println(str); }
+
+    @Override
+    public boolean askReconnect() {
+        System.out.println("Server connection problems!\n Do you wanna reconnect? (type yes(y) or type any other key to end program)");
+        String answer = scanner.nextLine();
+        return (answer.toLowerCase().equals("y") || answer.toLowerCase().equals("yes"));
     }
-    public void print(String str) { System.out.println(str); }
 
     /**
      * запрашивает адрес сервера у пользователя
