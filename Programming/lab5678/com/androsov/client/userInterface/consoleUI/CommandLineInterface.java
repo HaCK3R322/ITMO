@@ -89,7 +89,7 @@ public class CommandLineInterface implements Ui {
 
     @Override
     public boolean askReconnect() {
-        System.out.println("Server connection problems!\n Do you wanna reconnect? (type yes|y or type any other key to end program)");
+        System.out.println("Do you wanna reconnect? (type yes|y or type any other key to end program)");
         String answer = scanner.nextLine();
         return (answer.toLowerCase().equals("y") || answer.toLowerCase().equals("yes"));
     }

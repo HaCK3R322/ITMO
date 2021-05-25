@@ -9,13 +9,12 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class AsyncIOHandler implements ClientIO {
+public class AsyncIOHandler implements ClientIO, Closeable {
     final private ByteBuffer buffer = ByteBuffer.allocate(4096);;
     private Selector selector;
     Set<SelectionKey> keys;
     Iterator<SelectionKey> keyIterator;
     SelectionKey currentKey;
-    SocketChannel channel;
 
     private SocketChannel client;
 
@@ -47,7 +46,7 @@ public class AsyncIOHandler implements ClientIO {
 
             if(keyIterator.hasNext()) {
                 currentKey = keyIterator.next();
-                channel = (SocketChannel) currentKey.channel();
+                client = (SocketChannel) currentKey.channel();
                 if(currentKey.isWritable() && !waitingForResponse) {
                     final ByteArrayOutputStream output = new ByteArrayOutputStream();
                     try (DataOutputStream os = new DataOutputStream(output)) {
@@ -57,7 +56,7 @@ public class AsyncIOHandler implements ClientIO {
                     buffer.clear();
                     buffer.put(output.toByteArray());
                     buffer.position(0);
-                    channel.write(buffer);
+                    client.write(buffer);
 
                     waitingForResponse = true;
 
@@ -83,10 +82,10 @@ public class AsyncIOHandler implements ClientIO {
 
             if(keyIterator.hasNext()) {
                 currentKey = keyIterator.next();
-                channel = (SocketChannel) currentKey.channel();
+                client = (SocketChannel) currentKey.channel();
                 if(currentKey.isReadable()) {
                     buffer.clear();
-                    channel.read(buffer);
+                    client.read(buffer);
 
                     try (DataInputStream is = new DataInputStream(new ByteArrayInputStream(buffer.array()))) {
                         response = is.readUTF();
@@ -104,12 +103,10 @@ public class AsyncIOHandler implements ClientIO {
         return response;
     }
 
-//    public void close() {
-//        try {
-//            channel.close();
-//            client.close();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    @Override
+    public void close() throws IOException {
+        client.close();
+        client.socket().close();
+        selector.close();
+    }
 }

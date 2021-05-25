@@ -19,7 +19,7 @@ public class Client {
 
         AsyncIOHandler asyncIO = new AsyncIOHandler();
         ClientIO io = asyncIO;
-        Ui ui = null;
+        Ui ui;
 
         while (true) {
             String serverAddress = CommandLineInterface.askAddress();
@@ -41,16 +41,11 @@ public class Client {
                 ui = new CommandLineInterface(io, messenger);
 
                 ui.init();
-                //asyncIO.close();
-//                if(ui.endSession()) {
-//                    break;
-//                }
+                if(ui.askReconnect() != true) {
+                    break;
+                }
             } catch (IOException e) {
                 System.out.println("Server connection error: " + e.getMessage());
-                if(ui != null) {
-                    if(!ui.askReconnect())
-                        break;
-                }
             }
         }
     }

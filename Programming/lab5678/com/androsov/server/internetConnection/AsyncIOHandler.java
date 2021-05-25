@@ -18,11 +18,9 @@ import java.util.Set;
  * and if the key is intended for reading(that is a command has come from the client),
  * then is imperative to send the result of this commands, and then delete this key.
  */
-public class AsyncIOHandler implements ServerIO, Closeable {
+public class AsyncIOHandler implements Closeable {
     final public Selector selector;
-    private final LinkedList<SocketChannel> channels = new LinkedList<>();
     private SocketChannel currentChannel;
-    private Set<SelectionKey> keys;
     private Iterator<SelectionKey> keyIterator;
     private SelectionKey currentKey;
 
@@ -68,7 +66,7 @@ public class AsyncIOHandler implements ServerIO, Closeable {
      * There we configure all keys to iterate with.
      */
     public void configureKeys() {
-        keys = selector.selectedKeys();
+        final Set<SelectionKey> keys = selector.selectedKeys();
         keyIterator = keys.iterator();
     }
 
@@ -89,22 +87,15 @@ public class AsyncIOHandler implements ServerIO, Closeable {
     /**
      * All easy: if current key is ACCEPTABLE, we accept new client.
      */
-    @Override
-    public void accept() {
-        try {
-            if (currentKey.isAcceptable()) {
-                final SocketChannel client = server.accept();
-                if(client != null) {
-                    client.configureBlocking(false);
-                    client.register(selector, SelectionKey.OP_READ);
+    public void accept() throws IOException {
+        if (currentKey.isAcceptable()) {
+            final SocketChannel client = server.accept();
+            if(client != null) {
+                client.configureBlocking(false);
+                client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
 
-                    channels.add(client);
-
-                    System.out.println("Connected client " + client.socket().getInetAddress().toString());
-                }
+                System.out.println("Connected client " + client.socket().getInetAddress().toString());
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
         }
     }
 
@@ -114,9 +105,8 @@ public class AsyncIOHandler implements ServerIO, Closeable {
      * @return
      * @throws IOException
      */
-    @Override
     public String getCommandLine() throws IOException {
-        String line = "";
+        String line = "wait";
         if (currentKey.isReadable()) {
             currentChannel = (SocketChannel) currentKey.channel();
 
@@ -126,10 +116,6 @@ public class AsyncIOHandler implements ServerIO, Closeable {
             try (DataInputStream is = new DataInputStream(new ByteArrayInputStream(buffer.array()))) {
                 line = is.readUTF();
             }
-
-            System.out.println("got command from (" + currentChannel.socket().getInetAddress().getCanonicalHostName() + "): " + line);
-        } else {
-            line = "wait";
         }
         return line;
     }
@@ -141,7 +127,6 @@ public class AsyncIOHandler implements ServerIO, Closeable {
      * @param line
      * @throws IOException
      */
-    @Override
     public void sendResponse(String line) throws IOException {
         currentChannel = (SocketChannel) currentKey.channel();
 
@@ -156,13 +141,32 @@ public class AsyncIOHandler implements ServerIO, Closeable {
         currentChannel.write(buffer);
     }
 
-    @Override
-    public void close() throws IOException {
-        selector.close();
-        currentChannel.close();
+    public void close(){
+        try {
+            selector.close();
+            currentChannel.socket().close();
+            currentChannel.close();
+            buffer.clear();
+        } catch (IOException e) {
+            System.out.println("AsyncIO close exception: " + e.getMessage());
+        }
+    }
+
+    public void closeCurrentChannel() {
+        try {
+            currentChannel.socket().close();
+            currentChannel.close();
+            buffer.clear();
+        } catch (IOException e) {
+            System.out.println("AsyncIO close exception: " + e.getMessage());
+        }
     }
 
     public void removeCurrentKey() {
         keyIterator.remove();
+    }
+
+    public String getCurrentSocketAddress() {
+        return currentChannel.socket().getInetAddress().getCanonicalHostName();
     }
 }

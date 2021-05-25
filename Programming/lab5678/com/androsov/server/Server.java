@@ -24,7 +24,7 @@ public class Server {
 
         AsyncIOHandler asyncIO = new AsyncIOHandler();
         IOHandler syncIO = new IOHandler();
-        ServerIO io = asyncIO;
+        //ServerIO io = asyncIO;
 
         ProductBuilder productBuilder = new ProductBuilder();
         ListDeserializer deserializer = new ListDeserializer(productBuilder);
@@ -73,10 +73,6 @@ public class Server {
 
         commandHandler.registryCommand(new GetCommandsFormats(commandHandler));
 
-        System.out.println("----------");
-        System.out.println(commandHandler.executeCommand("get_commands_formats"));
-        System.out.println("----------");
-
         //io.accept();
 
         String commandLine;
@@ -89,30 +85,19 @@ public class Server {
                 while (asyncIO.goToNextKey()) {
                     asyncIO.accept();
                     commandLine = asyncIO.getCommandLine();
-                    if(!commandLine.equals("wait")) {
+                    if(!commandLine.equals("wait") && !commandLine.equals("")) {
+                        System.out.println("Got command line from client (" + asyncIO.getCurrentSocketAddress() + "): " + commandLine);
                         asyncIO.sendResponse(commandHandler.executeCommand(commandLine));
-                        asyncIO.removeCurrentKey();
                     }
+                    asyncIO.removeCurrentKey();
                 }
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Server (in work with " + asyncIO.getCurrentSocketAddress() + ") in cycle exception: " + e.getMessage());
+                asyncIO.closeCurrentChannel();
             }
         }
 
-
-//        while (!stop) {
-//            try {
-//                commandLine = io.getCommandLine();
-//                String result = commandHandler.executeCommand(commandLine);
-//                if(result != "\0")
-//                    io.sendResponse(result);
-//                else
-//                    stop = true;
-//            } catch (IOException e) {
-//                System.out.println("IOException: " + e.getMessage());
-//                io.accept();
-//            }
-//        }
+        //asyncIO.close();
         //commandHandler.executeCommand("save");
     }
 }
