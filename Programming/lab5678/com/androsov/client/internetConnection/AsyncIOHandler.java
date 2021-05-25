@@ -32,23 +32,13 @@ public class AsyncIOHandler implements ClientIO {
         System.out.println("Connected to server " + ipAddress + ":" + port);
     }
 
-    public void configureKeys() {
-        currentKey = keyIterator.next();
-        channel = (SocketChannel) currentKey.channel();
-    }
-
-    public boolean nextKey() {
-        if(keyIterator.hasNext()) {
-            currentKey = keyIterator.next();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    //scanner.nextLine()
+    /**
+     * After getting user command, we sending this command to server/
+     * @param line
+     * @throws IOException
+     */
     @Override
-    public void sendCommandLine(String line) throws IOException { // send command if it possible, else wait opportunity to send command
+    public void sendCommandLine(String line) throws IOException {
         while(true) {
             selector.select();
 
@@ -113,4 +103,13 @@ public class AsyncIOHandler implements ClientIO {
 
         return response;
     }
+
+//    public void close() {
+//        try {
+//            channel.close();
+//            client.close();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

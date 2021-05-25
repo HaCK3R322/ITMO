@@ -7,4 +7,5 @@ public interface Ui {
     void sendResponse(String line);
     boolean askReconnect();
     void init() throws IOException;
+    boolean endSession();
 }

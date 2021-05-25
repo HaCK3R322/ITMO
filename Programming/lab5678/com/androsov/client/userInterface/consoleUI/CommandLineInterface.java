@@ -39,8 +39,9 @@ public class CommandLineInterface implements Ui {
             //get new user command from System.in
             String command = getCommand();
 
-            if(command.equals("exit"))
+            if(command.equals("exit")) {
                 break;
+            }
 
             //if command not void
             if(command.split(" ").length > 0) {
@@ -69,6 +70,18 @@ public class CommandLineInterface implements Ui {
     }
 
     @Override
+    public boolean endSession() {
+        System.out.println("Do you really wanna exit? (type yes|y  to to end program or type any other key to continue work)");
+        String answer = scanner.nextLine();
+        if((answer.toLowerCase().equals("y") || answer.toLowerCase().equals("yes"))) {
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public String getCommand() { return scanner.nextLine();  }
 
     @Override
@@ -76,7 +89,7 @@ public class CommandLineInterface implements Ui {
 
     @Override
     public boolean askReconnect() {
-        System.out.println("Server connection problems!\n Do you wanna reconnect? (type yes(y) or type any other key to end program)");
+        System.out.println("Server connection problems!\n Do you wanna reconnect? (type yes|y or type any other key to end program)");
         String answer = scanner.nextLine();
         return (answer.toLowerCase().equals("y") || answer.toLowerCase().equals("yes"));
     }

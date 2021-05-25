@@ -84,11 +84,13 @@ public class Server {
             try {
                 asyncIO.selector.select();
                 asyncIO.configureKeys();
-                while (asyncIO.nextKey()) {
-                    io.accept();
-                    commandLine = io.getCommandLine();
+
+                //key may be "acceptable" or "readable"
+                while (asyncIO.goToNextKey()) {
+                    asyncIO.accept();
+                    commandLine = asyncIO.getCommandLine();
                     if(!commandLine.equals("wait")) {
-                        io.sendResponse(commandHandler.executeCommand(commandLine));
+                        asyncIO.sendResponse(commandHandler.executeCommand(commandLine));
                         asyncIO.removeCurrentKey();
                     }
                 }

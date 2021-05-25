@@ -27,6 +27,9 @@ public class GetCommandsFormats extends ListCommand {
                 result += commandEntry.getKey() + " " + commandEntry.getValue().getArgumentFormat() + "\n";
         }
 
+        //deleting last "\n", just for beauty
+        result = result.substring(0, result.length() - 1);
+
         return result;
     }
 
