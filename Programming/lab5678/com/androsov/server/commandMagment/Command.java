@@ -1,9 +1,13 @@
 package com.androsov.server.commandMagment;
 
+import com.androsov.general.response.Response;
+
+import java.util.List;
+
 public interface Command {
-    String execute(String[] args);
+    Response execute(List<Object> args);
     String getName();
     String getDescription();
-    boolean isUserAccessible();
     String getArgumentFormat();
+    boolean isUserAccessible();
 }

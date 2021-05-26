@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment;
 
+import com.androsov.general.request.Request;
+import com.androsov.general.response.Response;
 import com.androsov.server.productManagment.exceptions.CommandBuildError;
 
 import java.util.HashMap;
@@ -9,7 +11,6 @@ import java.util.List;
 public class CommandHandler {
     public HashMap<String, Command> commandMap;
     public List<String> history;
-    CommandBuilder commandBuilder;
 
     public CommandHandler() {
         commandMap = new HashMap<>();
@@ -17,9 +18,13 @@ public class CommandHandler {
     }
 
     public void registryCommand(Command command) throws CommandBuildError {
-        Command builtCommand = CommandBuilder.build(command);
+        CommandStructureChecker.check(command);
+        commandMap.put(command.getName(), command);
+    }
 
-        commandMap.put(builtCommand.getName(), builtCommand);
+    public Response executeCommand(Request request) {
+        history.add(request.getCommandName());
+        return commandMap.get(request.getCommandName()).execute(request.getArgs());
     }
 
     public String executeCommand(String commandLine) {

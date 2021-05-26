@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.CommandHandler;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
@@ -7,6 +9,7 @@ import com.androsov.server.productManagment.exceptions.SelfCycledScriptChainExce
 import com.androsov.server.scripting.Script;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ExecuteScript extends ListCommand {
     CommandHandler commandHandler;
@@ -22,11 +25,12 @@ public class ExecuteScript extends ListCommand {
         userAccessible = true;
     }
 
-    public String execute(String[] args) {
+    public Response execute(List<Object> args) {
+        Response response = new ResponseImpl();
         String result = "";
 
         try {
-            String scriptName = args[0];
+            String scriptName = (String) args.get(0);
             Script script = new Script(scriptName);
 
             for(int i = 0; i < script.commands.size(); i++) {
@@ -41,7 +45,8 @@ public class ExecuteScript extends ListCommand {
             result = "<" + messenger.ExecuteScript().Script_error + ">: " + e.getMessage();
         }
 
-        return result;
+        response.setMessage(result);
+        return response;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.androsov.server;
 
+import com.androsov.server.commandMagment.Command;
 import com.androsov.server.commandMagment.CommandHandler;
 import com.androsov.server.commandMagment.commands.*;
 import com.androsov.server.internetConnection.AsyncIOHandler;
@@ -12,6 +13,8 @@ import com.androsov.server.productManagment.ProductBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +23,6 @@ public class Server {
     public static void main(String[] args) {
         final String PRODUCT_LIST_ENV = "LAB5_CONTENT";
         File lab5ContentFile;
-
 
         AsyncIOHandler asyncIO = new AsyncIOHandler();
         //IOHandler syncIO = new IOHandler();
@@ -37,10 +39,6 @@ public class Server {
             } else {
                 list = new LinkedList<>();
             }
-        } catch (NullPointerException e) {
-            System.out.println("List initialization error: Check your env vars.");
-            lab5ContentFile = new File("lab5Content.json");
-            list = new LinkedList<>();
         } catch (Exception e) {
             System.out.println("List initialization error: " + e.getMessage());
             lab5ContentFile = new File("lab5Content.json");

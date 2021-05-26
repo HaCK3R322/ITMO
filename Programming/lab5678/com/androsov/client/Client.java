@@ -9,13 +9,30 @@ import com.androsov.client.userInterface.Ui;
 import com.androsov.client.userInterface.consoleUI.CommandLineInterface;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 //вариант 296173
 
+class House {
+    int number;
+    public House(int num) {
+        number = num;
+    }
+}
+
+class Person {
+    House house;
+    int personNumber;
+    Person(int hn, int pn) {
+        house = new House(hn);
+        personNumber = pn;
+    }
+}
+
 public class Client {
-    public static void main(String[] args) {
-        Messenger messenger = new EngMessenger();
+    public static void main(String[] args) {Messenger messenger = new EngMessenger();
 
         AsyncIOHandler asyncIO = new AsyncIOHandler();
         ClientIO io = asyncIO;

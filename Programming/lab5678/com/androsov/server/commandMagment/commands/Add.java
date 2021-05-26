@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.internetConnection.ServerIO;
 import com.androsov.server.messengers.MessengersHandler;
@@ -9,6 +11,7 @@ import com.androsov.server.productManagment.exceptions.ContentException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class Add extends ListCommand {
     List<Product> list;
@@ -24,6 +27,30 @@ public class Add extends ListCommand {
         description = messenger.Add().description;
         argumentFormat = "String";
         userAccessible = true;
+    }
+
+    //решить: делать такой продукт на стороне клиента или на стороне сервера
+    @Override
+    public Response execute(List<Object> args) {
+        Response response = new ResponseImpl();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Object object: args) {
+            try {
+                Product product = productBuilder.buildProduct((ProductBuilder.ProductImitator) object);
+                list.add(product);
+                stringBuilder.append("Product ");
+                stringBuilder.append(product.getName());
+                stringBuilder.append(" was added!");
+            } catch (ContentException | ClassCastException e) {
+                stringBuilder.append("\nProduct adding error: object ");
+                stringBuilder.append(object.toString());
+                stringBuilder.append(" can not be built: ");
+                stringBuilder.append(e.getMessage());
+            }
+        }
+        response.setMessage(stringBuilder.toString());
+        return response;
     }
 
     /**

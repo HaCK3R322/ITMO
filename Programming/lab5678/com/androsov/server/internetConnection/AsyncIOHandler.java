@@ -1,5 +1,7 @@
 package com.androsov.server.internetConnection;
 
+import com.androsov.server.commandMagment.Command;
+
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -46,21 +48,6 @@ public class AsyncIOHandler implements Closeable {
             throw new RuntimeException(e);
         }
     }
-
-//    public void closeRefusedConnections() {
-//        try {
-//            for(int i = 0; i < channels.size(); i++) {
-//                if(!channels.get(i).isConnected()) {
-//                    channels.get(i).socket().close();
-//                    channels.get(i).close();
-//                    channels.remove(i);
-//                    System.out.println("channel " + channels.get(i).socket().getInetAddress() + " disconnected");
-//                }
-//            }
-//        } catch (IOException e) {
-//            System.out.println("close error");
-//        }
-//    }
 
     /**
      * There we configure all keys to iterate with.

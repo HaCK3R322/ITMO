@@ -4,8 +4,8 @@ import com.androsov.server.productManagment.exceptions.CommandBuildError;
 
 import java.lang.reflect.Field;
 
-public class CommandBuilder {
-    public static Command build(Command command) throws CommandBuildError {
+public class CommandStructureChecker {
+    public static void check(Command command) throws CommandBuildError {
         Class commandClass = command.getClass();
         Class<?> current = command.getClass();
         while(current.getSuperclass() != null){
@@ -18,7 +18,5 @@ public class CommandBuilder {
             }
             current = current.getSuperclass();
         }
-
-        return command;
     }
 }
