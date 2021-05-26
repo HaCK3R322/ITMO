@@ -27,17 +27,27 @@ public class Help extends ListCommand {
 
         if(args.length != 0)
         {
+            StringBuilder sb = new StringBuilder();
             for (String arg: args) {
-                result += arg + ": " + commandHandler.getCommand(arg).getDescription() + "\n";
+                sb.append(arg);
+                sb.append(": ");
+                sb.append(commandHandler.getCommand(arg).getDescription());
+                sb.append("\n");
             }
-
-            result = result.substring(0, result.length() - 1);
+            sb.deleteCharAt(sb.length() - 1);
+            result = sb.toString();
         } else {
-            result += "list of languages: " + messenger.getAllLangsNames() + "\n\n";
+            StringBuilder sb = new StringBuilder();
+            sb.append("list of languages: " + messenger.getAllLangsNames() + "\n\n");
             for(Map.Entry<String, Command> commandEntry : commandHandler.commandMap.entrySet()) {
-                if(commandEntry.getValue().isUserAccessible())
-                    result += commandEntry.getKey() + ": " + commandEntry.getValue().getDescription() + "\n";
+                if(commandEntry.getValue().isUserAccessible()) {
+                    sb.append(commandEntry.getKey());
+                    sb.append(": ");
+                    sb.append(commandEntry.getValue().getDescription());
+                    sb.append("\n");
+                }
             }
+            result = sb.toString();
         }
 
         return result;

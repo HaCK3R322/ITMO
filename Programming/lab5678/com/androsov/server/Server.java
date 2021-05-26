@@ -23,7 +23,7 @@ public class Server {
 
 
         AsyncIOHandler asyncIO = new AsyncIOHandler();
-        IOHandler syncIO = new IOHandler();
+        //IOHandler syncIO = new IOHandler();
         //ServerIO io = asyncIO;
 
         ProductBuilder productBuilder = new ProductBuilder();

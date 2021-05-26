@@ -20,17 +20,19 @@ public class GetCommandsFormats extends ListCommand {
 
     @Override
     public String execute(String[] args) {
-        String result = "";
-
+        StringBuilder sb = new StringBuilder();
         for(Map.Entry<String, Command> commandEntry : commandHandler.commandMap.entrySet()) {
-            if(commandEntry.getValue().isUserAccessible())
-                result += commandEntry.getKey() + " " + commandEntry.getValue().getArgumentFormat() + "\n";
+            if(commandEntry.getValue().isUserAccessible()) {
+                sb.append(commandEntry.getKey());
+                sb.append(" ");
+                sb.append(commandEntry.getValue().getArgumentFormat());
+                sb.append("\n");
+            }
         }
-
         //deleting last "\n", just for beauty
-        result = result.substring(0, result.length() - 1);
+        sb.deleteCharAt(sb.length() - 1);
 
-        return result;
+        return sb.toString();
     }
 
     @Override
