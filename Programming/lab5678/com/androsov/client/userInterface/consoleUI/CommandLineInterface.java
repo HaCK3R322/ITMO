@@ -7,6 +7,7 @@ import com.androsov.client.messenger.RuMessenger;
 import com.androsov.client.userInterface.Ui;
 import com.androsov.general.IO.IO;
 import com.androsov.general.ObjectSerialization;
+import com.androsov.general.User;
 import com.androsov.general.request.Request;
 import com.androsov.general.request.RequestImpl;
 import com.androsov.general.response.Response;
@@ -16,16 +17,19 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CommandLineInterface implements Ui {
+    User user;
+
     IO io;
     final private Scanner scanner = new Scanner(System.in);
     final CommandFormatter formatter;
     Messenger messenger;
 
-    public CommandLineInterface(IO io, Messenger messenger) throws IOException {
+    public CommandLineInterface(IO io, Messenger messenger, User user) throws IOException {
+        this.user = user;
         this.io = io;
         this.messenger = messenger;
 
-        io.send(ObjectSerialization.serialize(new RequestImpl("get_commands_formats")));
+        io.send(ObjectSerialization.serialize(new RequestImpl("get_commands_formats", user)));
         formatter = new CommandFormatter(((Response) io.get()).getMessage());
     }
 
@@ -35,7 +39,7 @@ public class CommandLineInterface implements Ui {
      */
     @Override
     public void init() throws IOException {
-        io.send(ObjectSerialization.serialize(new RequestImpl("help")));
+        io.send(ObjectSerialization.serialize(new RequestImpl("help", user)));
         System.out.println(((Response) io.get()).getMessage());
         System.out.println("-------------------------------------------------");
         System.out.println("Type command here:");
@@ -54,7 +58,7 @@ public class CommandLineInterface implements Ui {
                 if(formatter.isValid(command)) {
                     final String name = formatter.getName(command);
                     final List<Object> args = formatter.getArgs(command);
-                    final Request request = new RequestImpl(name, args);
+                    final Request request = new RequestImpl(name, args, user);
                     io.send(ObjectSerialization.serialize(request));
                     System.out.println(((Response) io.get()).getMessage());
                 } else {

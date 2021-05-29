@@ -9,4 +9,6 @@ public interface Response {
     List<Object> getData();
     void setData(List<Object> data);
     void addData(Object obj);
+
+
 }

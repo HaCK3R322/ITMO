@@ -1,18 +1,23 @@
 package com.androsov.general.request;
 
+import com.androsov.general.User;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class RequestImpl implements Request {
+    private final User user;
     private final String commandName;
     private final List<Object> argsList;
 
-    public RequestImpl(String commandName) {
+    public RequestImpl(String commandName, User user) {
+        this.user = user;
         this.commandName = commandName;
         argsList = new LinkedList<>();
     }
 
-    public RequestImpl(String commandName, List<Object> argsList) {
+    public RequestImpl(String commandName, List<Object> argsList, User user) {
+        this.user = user;
         this.commandName = commandName;
         this.argsList = argsList;
     }

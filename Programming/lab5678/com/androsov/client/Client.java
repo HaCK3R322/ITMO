@@ -8,13 +8,17 @@ import com.androsov.client.messenger.Messenger;
 import com.androsov.client.userInterface.Ui;
 import com.androsov.client.userInterface.consoleUI.CommandLineInterface;
 import com.androsov.general.IO.IO;
+import com.androsov.general.User;
 
 import java.io.*;
+import java.net.InetAddress;
 
 //вариант 296173
 public class Client {
     public static void main(String[] args) {
         Messenger messenger = new EngMessenger();
+
+        User user;
 
         ClientIO clientIO = new ClientIO();
         IO io = clientIO;
@@ -36,8 +40,8 @@ public class Client {
                     System.out.println("Incorrect address: " + e.getMessage() + "\nTry again.");
                     continue;
                 }
-
-                ui = new CommandLineInterface(io, messenger);
+                user = new User(InetAddress.getLocalHost());
+                ui = new CommandLineInterface(io, messenger, user);
 
                 ui.init();
                 if(ui.askReconnect() != true) {

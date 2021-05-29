@@ -75,6 +75,7 @@ public class Server {
             try {
                 while (serverIO.hasRequest()) {
                     final Request request = (Request) ObjectSerialization.deserialize(io.get());
+                    serverIO.setUser(request.getUser());
                     final Response response = commandHandler.executeCommand(request);
                     io.send(ObjectSerialization.serialize(response));
                 }
@@ -83,34 +84,34 @@ public class Server {
             }
         }
 
-        String commandLine;
-        while (true) {
-            try {
-                asyncIO.selector.select();
-                asyncIO.configureKeys();
-
-                while (serverIO.hasRequest()) {
-                    final Request request = (Request) ObjectSerialization.deserialize(io.get());
-                    final Response response = commandHandler.executeCommand(request);
-                    io.send(ObjectSerialization.serialize(response));
-                }
-
-
-                //key may be "acceptable" or "readable"
-                while (asyncIO.goToNextKey()) {
-                    asyncIO.accept();
-                    commandLine = asyncIO.getCommandLine();
-                    if(!commandLine.equals("wait") && !commandLine.equals("")) {
-                        System.out.println("Got command line from client (" + asyncIO.getCurrentSocketAddress() + "): " + commandLine);
-                        //asyncIO.sendResponse(commandHandler.executeCommand(commandLine));
-                    }
-                    asyncIO.removeCurrentKey();
-                }
-            } catch (IOException e) {
-                System.out.println("Server (in work with " + asyncIO.getCurrentSocketAddress() + ") in cycle exception: " + e.getMessage());
-                asyncIO.closeCurrentChannel();
-            }
-        }
+//        String commandLine;
+//        while (true) {
+//            try {
+//                asyncIO.selector.select();
+//                asyncIO.configureKeys();
+//
+//                while (serverIO.hasRequest()) {
+//                    final Request request = (Request) ObjectSerialization.deserialize(io.get());
+//                    final Response response = commandHandler.executeCommand(request);
+//                    io.send(ObjectSerialization.serialize(response));
+//                }
+//
+//
+//                //key may be "acceptable" or "readable"
+//                while (asyncIO.goToNextKey()) {
+//                    asyncIO.accept();
+//                    commandLine = asyncIO.getCommandLine();
+//                    if(!commandLine.equals("wait") && !commandLine.equals("")) {
+//                        System.out.println("Got command line from client (" + asyncIO.getCurrentSocketAddress() + "): " + commandLine);
+//                        //asyncIO.sendResponse(commandHandler.executeCommand(commandLine));
+//                    }
+//                    asyncIO.removeCurrentKey();
+//                }
+//            } catch (IOException e) {
+//                System.out.println("Server (in work with " + asyncIO.getCurrentSocketAddress() + ") in cycle exception: " + e.getMessage());
+//                asyncIO.closeCurrentChannel();
+//            }
+//        }
 
         //asyncIO.close();
         //commandHandler.executeCommand("save");
