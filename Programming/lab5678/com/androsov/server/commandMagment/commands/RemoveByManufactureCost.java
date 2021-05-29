@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
@@ -21,11 +23,12 @@ public class RemoveByManufactureCost extends ListCommand {
     }
 
     @Override
-    public String execute(String[] args) {
+    public Response execute(List<Object> args) {
+        final Response response = new ResponseImpl();
         String result = "";
-        if(args.length > 0) {
+        if(args.size() > 0) {
             try {
-                Float cost = Float.parseFloat(args[0]);
+                Float cost = (Float)args.get(0);
                 for(int i = 0; i < list.size(); i++) {
                     if(list.get(i).getManufactureCost().equals(cost)) {
                         list.remove(i);
@@ -38,8 +41,8 @@ public class RemoveByManufactureCost extends ListCommand {
         } else {
             result = messenger.RemoveByManufactureCost().Please_enter_cost;
         }
-
-        return result;
+        response.setMessage(result);
+        return response;
     }
 
     @Override

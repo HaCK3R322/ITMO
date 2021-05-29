@@ -1,9 +1,12 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.Command;
 import com.androsov.server.commandMagment.CommandHandler;
 import com.androsov.server.commandMagment.ListCommand;
 
+import java.util.List;
 import java.util.Map;
 
 public class GetCommandsFormats extends ListCommand {
@@ -19,7 +22,8 @@ public class GetCommandsFormats extends ListCommand {
     }
 
     @Override
-    public String execute(String[] args) {
+    public Response execute(List<Object> args) {
+        Response response = new ResponseImpl();
         StringBuilder sb = new StringBuilder();
         for(Map.Entry<String, Command> commandEntry : commandHandler.commandMap.entrySet()) {
             if(commandEntry.getValue().isUserAccessible()) {
@@ -31,8 +35,8 @@ public class GetCommandsFormats extends ListCommand {
         }
         //deleting last "\n", just for beauty
         sb.deleteCharAt(sb.length() - 1);
-
-        return sb.toString();
+        response.setMessage(sb.toString());
+        return response;
     }
 
     @Override

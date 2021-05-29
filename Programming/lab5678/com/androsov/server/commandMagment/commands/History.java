@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.CommandHandler;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
@@ -21,7 +23,9 @@ public class History extends ListCommand {
     }
 
     @Override
-    public String execute(String[] args) {
+    public Response execute(List<Object> args) {
+        Response response = new ResponseImpl();
+
         String result = messenger.History().history + ":\n";
 
         int NUMBER_OF_LAST_COMMANDS_TO_SHOW = 12;
@@ -35,7 +39,9 @@ public class History extends ListCommand {
             result += "   - " + lastCommands.get(i) + "\n";
         }
 
-        return result;
+        response.setMessage(result);
+
+        return response;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
@@ -21,9 +23,11 @@ public class Sort extends ListCommand {
     }
 
     @Override
-    public String execute(String[] args) {
+    public Response execute(List<Object> args) {
         list.sort(Product::compareTo);
-        return messenger.Sort().Sorted;
+        final Response response = new ResponseImpl();
+        response.setMessage(messenger.Sort().Sorted);
+        return response;
     }
 
     @Override

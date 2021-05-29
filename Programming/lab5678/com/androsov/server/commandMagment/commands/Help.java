@@ -1,10 +1,14 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.Command;
 import com.androsov.server.commandMagment.CommandHandler;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
 
+import java.util.List;
 import java.util.Map;
 
 public class Help extends ListCommand {
@@ -21,36 +25,34 @@ public class Help extends ListCommand {
         userAccessible = true;
     }
 
-    public String execute(String[] args) {
+    @Override
+    public Response execute(List<Object> args) {
+        Response response = new ResponseImpl();
 
-        String result = "";
-
-        if(args.length != 0)
-        {
-            StringBuilder sb = new StringBuilder();
-            for (String arg: args) {
-                sb.append(arg);
+        StringBuilder sb = new StringBuilder();
+        if(args.size() != 0) {
+            for (Object arg: args) {
+                sb.append((String) arg);
                 sb.append(": ");
-                sb.append(commandHandler.getCommand(arg).getDescription());
+                sb.append(commandHandler.getCommand((String) arg).getDescription());
                 sb.append("\n");
             }
             sb.deleteCharAt(sb.length() - 1);
-            result = sb.toString();
+            response.setMessage(sb.toString());
         } else {
-            StringBuilder sb = new StringBuilder();
-            sb.append("list of languages: " + messenger.getAllLangsNames() + "\n\n");
-            for(Map.Entry<String, Command> commandEntry : commandHandler.commandMap.entrySet()) {
-                if(commandEntry.getValue().isUserAccessible()) {
+            sb.append("list of languages: ").append(messenger.getAllLangsNames()).append("\n\n");
+            for (Map.Entry<String, Command> commandEntry : commandHandler.commandMap.entrySet()) {
+                if (commandEntry.getValue().isUserAccessible()) {
                     sb.append(commandEntry.getKey());
                     sb.append(": ");
                     sb.append(commandEntry.getValue().getDescription());
                     sb.append("\n");
                 }
             }
-            result = sb.toString();
+            response.setMessage(sb.toString());
         }
 
-        return result;
+        return response;
     }
 
     @Override

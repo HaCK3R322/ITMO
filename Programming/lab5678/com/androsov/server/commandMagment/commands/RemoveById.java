@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
@@ -26,12 +28,13 @@ public class RemoveById extends ListCommand {
 
     // какой-то баг, надо исправить!
     @Override
-    public String execute(String[] args) {
-        String result = "";
+    public Response execute(List<Object> args) {
+        final Response response = new ResponseImpl();
+        String result;
 
-        if(args.length > 0) {
+        if(args.size() > 0) {
             try {
-                long id = Long.parseLong(args[0]);
+                Long id = (Long)args.get(0);
 
                 ListIterator<Product> iter = list.listIterator();
                 Product p;
@@ -50,7 +53,9 @@ public class RemoveById extends ListCommand {
             result = messenger.RemoveById().Please_enter_id;
         }
 
-        return result;
+        response.setMessage(result);
+
+        return response;
     }
 
     @Override

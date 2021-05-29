@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
@@ -23,12 +25,17 @@ public class Info extends ListCommand {
         userAccessible = true;
     }
 
-    public String execute(String[] args) {
-        return (messenger.Info().Collection_info + ":" + "\n" +
+    @Override
+    public Response execute(List<Object> args) {
+        final Response response = new ResponseImpl();
+
+        response.setMessage((messenger.Info().Collection_info + ":" + "\n" +
                 "   " + messenger.Info().type_Linked_list + " " + "\n" +
                 "   " + messenger.Info().initialization_date + ": " + initializationTime.toString() + "\n" +
                 "   " + messenger.Info().number_of_elements + ": " + list.size()
-        );
+        ));
+
+        return response;
     }
 
     @Override

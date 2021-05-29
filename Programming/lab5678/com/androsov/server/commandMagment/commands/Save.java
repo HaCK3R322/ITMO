@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
@@ -26,10 +28,11 @@ public class Save extends ListCommand {
     }
 
     @Override
-    public String execute(String[] args) {
-        String result = "";
+    public Response execute(List<Object> args) {
+        final Response response = new ResponseImpl();
+        String result;
 
-        if(args.length == 0) {
+        if(args.size() == 0) {
             try {
                 ListSerializer.serializeListToFile(file, list);
                 result = messenger.Save().saved;
@@ -38,7 +41,7 @@ public class Save extends ListCommand {
             }
         } else {
             try {
-                File fileToSave = new File(args[0]);
+                File fileToSave = new File((String) args.get(0));
                 ListSerializer.serializeListToFile(fileToSave, list);
                 result = messenger.Save().saved;
             } catch (IOException e) {
@@ -46,7 +49,8 @@ public class Save extends ListCommand {
             }
         }
 
-        return result;
+        response.setMessage(result);
+        return response;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.internetConnection.ServerIO;
 import com.androsov.server.messengers.MessengersHandler;
@@ -8,6 +10,7 @@ import com.androsov.server.productManagment.ProductBuilder;
 import com.androsov.server.productManagment.exceptions.ContentException;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 public class UpdateById extends ListCommand {
@@ -31,12 +34,14 @@ public class UpdateById extends ListCommand {
     }
 
     @Override
-    public String execute(String[] args) {
-        String result = "";
+    public Response execute(List<Object> args) {
+        final Response response = new ResponseImpl();
+        String result;
 
-        if(args.length > 0) {
+        if(args.size() > 0) {
             try {
-                long id = Long.parseLong(args[0]);
+                Long id = (Long)args.get(0);
+                args.remove(0);
                 String partNumber = null;
                 for(int i = 0; i < list.size(); i++) {
                     if(list.get(i).getId() == id) {
@@ -49,7 +54,7 @@ public class UpdateById extends ListCommand {
 
                 for(int i = 0; i < list.size(); i++) {
                     if(list.get(i).getId() == id) {
-                        list.set(i, productBuilder.buildProduct(add.createProductManually(args), id));
+                        list.set(i, productBuilder.buildProduct(add.createProductManually(args.toArray(String[]::new)), id));
                         break;
                     }
                 }
@@ -65,7 +70,8 @@ public class UpdateById extends ListCommand {
             result = messenger.UpdateById().Please_enter_id;
         }
 
-        return result;
+        response.setMessage(result);
+        return response;
     }
 
     @Override

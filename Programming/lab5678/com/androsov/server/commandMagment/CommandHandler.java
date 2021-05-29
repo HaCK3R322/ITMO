@@ -1,9 +1,12 @@
 package com.androsov.server.commandMagment;
 
 import com.androsov.general.request.Request;
+import com.androsov.general.request.RequestImpl;
 import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.productManagment.exceptions.CommandBuildError;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,25 +30,29 @@ public class CommandHandler {
         return commandMap.get(request.getCommandName()).execute(request.getArgs());
     }
 
-    public String executeCommand(String commandLine) {
+    public Response executeCommand(String commandLine) {
+        Response response = new ResponseImpl();
         String result = "";
 
         String name = CommandFormatter.getName(commandLine);
         String[] args = CommandFormatter.getArgs(commandLine);
 
+        Request request = new RequestImpl(name, new LinkedList<>(Arrays.asList(args)));
+
         try {
-            result = executeCommand(name, args);
+            response = executeCommand(request);
         } catch (NullPointerException e) {
-            result = "No such command. Type \"help\" to see available commands";
+            response.setMessage("No such command. Type \"help\" to see available commands");
         }
 
-        return result;
+        return response;
     }
 
-    public String executeCommand(String name, String[] args) {
-        history.add(name);
-        return commandMap.get(name).execute(args);
-    }
+//    public String executeCommand(String name, String[] args) {
+//        history.add(name);
+//        return commandMap.get(name).execute(args);
+//    }
+
 
     public Command getCommand(String name) {
         return commandMap.get(name);

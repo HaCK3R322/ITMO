@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
@@ -21,8 +23,10 @@ public class RemoveFirst extends ListCommand {
     }
 
     @Override
-    public String execute(String[] args) {
-        String result = "";
+    public Response execute(List<Object> args) {
+        final Response response = new ResponseImpl();
+
+        String result;
 
         if(list.size() > 0) {
             result = messenger.RemoveFirst().Product_with_id + " " + list.get(0).getId() + " " + messenger.RemoveFirst().was_removed;
@@ -31,7 +35,9 @@ public class RemoveFirst extends ListCommand {
             result = messenger.RemoveFirst().List_is_already_empty;
         }
 
-        return result;
+        response.setMessage(result);
+
+        return response;
     }
 
     @Override

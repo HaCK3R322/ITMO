@@ -1,5 +1,7 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
@@ -20,7 +22,9 @@ public class Show extends ListCommand {
         userAccessible = true;
     }
 
-    public String execute(String[] args) {
+    @Override
+    public Response execute(List<Object> args) {
+        final Response response = new ResponseImpl();
         String result = "";
 
         if(list.size() > 0) {
@@ -33,7 +37,8 @@ public class Show extends ListCommand {
             result = "|list is empty|";
         }
 
-        return result;
+        response.setMessage(result);
+        return response;
     }
 
     @Override
