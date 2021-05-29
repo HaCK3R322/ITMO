@@ -25,8 +25,8 @@ public class CommandLineInterface implements Ui {
         this.io = io;
         this.messenger = messenger;
 
-        io.sendCommandLine("get_commands_formats");
-        formatter = new CommandFormatter(io.getResponse());
+        io.send(ObjectSerialization.serialize(new RequestImpl("get_commands_formats")));
+        formatter = new CommandFormatter(((Response) io.get()).getMessage());
     }
 
     /**
@@ -35,8 +35,8 @@ public class CommandLineInterface implements Ui {
      */
     @Override
     public void init() throws IOException {
-        io.sendCommandLine("help");
-        System.out.println(io.getResponse());
+        io.send(ObjectSerialization.serialize(new RequestImpl("help")));
+        System.out.println(((Response) io.get()).getMessage());
         System.out.println("-------------------------------------------------");
         System.out.println("Type command here:");
 

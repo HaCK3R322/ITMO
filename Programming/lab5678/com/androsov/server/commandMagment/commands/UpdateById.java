@@ -3,14 +3,11 @@ package com.androsov.server.commandMagment.commands;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
-import com.androsov.server.internetConnection.ServerIO;
 import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.productManagment.ProductBuilder;
 import com.androsov.server.productManagment.exceptions.ContentException;
 
-import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 public class UpdateById extends ListCommand {

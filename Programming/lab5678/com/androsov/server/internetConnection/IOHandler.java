@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class IOHandler implements ServerIO {
+public class IOHandler implements ServerIOOLD {
     protected ServerSocket serverSocket;
     protected Socket socket;
     DataInputStream in;

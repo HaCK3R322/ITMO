@@ -17,12 +17,16 @@ public class ObjectSerialization {
         return buffer;
     }
 
-    public static Object deserialize(ByteBuffer buffer) throws IOException, ClassNotFoundException {
-        final Object object;
+    public static Object deserialize(ByteBuffer buffer) throws IOException {
+        Object object = null; //может быть поправить, может нет
 
         try (ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(buffer.array()));
         ) {
-            object = objectInputStream.readObject();
+            try {
+                object = objectInputStream.readObject();
+            } catch (ClassNotFoundException e) {
+                //ignore
+            }
         }
 
         return object;

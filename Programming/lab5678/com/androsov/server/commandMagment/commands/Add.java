@@ -3,7 +3,7 @@ package com.androsov.server.commandMagment.commands;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
-import com.androsov.server.internetConnection.ServerIO;
+import com.androsov.server.internetConnection.ServerIOOLD;
 import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.*;
 import com.androsov.server.productManagment.ProductBuilder;
@@ -11,7 +11,6 @@ import com.androsov.server.productManagment.exceptions.ContentException;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 public class Add extends ListCommand {
     List<Product> list;
@@ -125,7 +124,7 @@ public class Add extends ListCommand {
         return productImitator;
     }
 
-    public ProductBuilder.ProductImitator createProductManually(ProductBuilder productBuilder, ServerIO io) throws IOException, ContentException {
+    public ProductBuilder.ProductImitator createProductManually(ProductBuilder productBuilder, ServerIOOLD io) throws IOException, ContentException {
         ProductBuilder.ProductImitator product = new ProductBuilder.ProductImitator();
 
         boolean statementNotPicked = true;

@@ -1,10 +1,13 @@
 package com.androsov.server;
 
-import com.androsov.server.commandMagment.Command;
+import com.androsov.general.IO.IO;
+import com.androsov.general.ObjectSerialization;
+import com.androsov.general.request.Request;
+import com.androsov.general.request.RequestImpl;
+import com.androsov.general.response.Response;
 import com.androsov.server.commandMagment.CommandHandler;
 import com.androsov.server.commandMagment.commands.*;
 import com.androsov.server.internetConnection.AsyncIOHandler;
-import com.androsov.server.internetConnection.IOHandler;
 import com.androsov.server.internetConnection.ServerIO;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.messengers.MessengersHandler;
@@ -13,8 +16,6 @@ import com.androsov.server.productManagment.ProductBuilder;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
-import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,9 +25,8 @@ public class Server {
         final String PRODUCT_LIST_ENV = "LAB5_CONTENT";
         File lab5ContentFile;
 
-        AsyncIOHandler asyncIO = new AsyncIOHandler();
-        //IOHandler syncIO = new IOHandler();
-        //ServerIO io = asyncIO;
+        ServerIO serverIO = new ServerIO();
+        IO io = serverIO;
 
         ProductBuilder productBuilder = new ProductBuilder();
         ListDeserializer deserializer = new ListDeserializer(productBuilder);
@@ -71,13 +71,30 @@ public class Server {
 
         commandHandler.registryCommand(new GetCommandsFormats(commandHandler));
 
-        //io.accept();
+        while (true) {
+            try {
+                while (serverIO.hasRequest()) {
+                    final Request request = (Request) ObjectSerialization.deserialize(io.get());
+                    final Response response = commandHandler.executeCommand(request);
+                    io.send(ObjectSerialization.serialize(response));
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
         String commandLine;
         while (true) {
             try {
                 asyncIO.selector.select();
                 asyncIO.configureKeys();
+
+                while (serverIO.hasRequest()) {
+                    final Request request = (Request) ObjectSerialization.deserialize(io.get());
+                    final Response response = commandHandler.executeCommand(request);
+                    io.send(ObjectSerialization.serialize(response));
+                }
+
 
                 //key may be "acceptable" or "readable"
                 while (asyncIO.goToNextKey()) {

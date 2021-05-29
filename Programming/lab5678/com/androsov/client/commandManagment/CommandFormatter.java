@@ -11,7 +11,7 @@ public class CommandFormatter {
      * Создаёт на основе ответа от сервера набор команд и аргументов, которые можно использовать с этими командами
      * @param commandsArguments
      */
-    public CommandFormatter(String commandsArguments) {
+    public CommandFormatter(String commandsArguments) { // переделать под чтение респонса
         this.commandsArguments = new HashMap<>();
 
         toClassMap = new HashMap<>();

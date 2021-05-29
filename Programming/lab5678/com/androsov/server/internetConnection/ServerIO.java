@@ -1,9 +1,21 @@
 package com.androsov.server.internetConnection;
 
-import java.io.IOException;
+import com.androsov.general.IO.IO;
 
-public interface ServerIO {
-    void accept();
-    String getCommandLine() throws IOException;
-    void sendResponse(String line) throws IOException;
+import java.nio.ByteBuffer;
+
+public class ServerIO implements IO {
+    public boolean hasRequest() {
+        return false;
+    }
+
+    @Override
+    public void send(ByteBuffer buffer) {
+
+    }
+
+    @Override
+    public ByteBuffer get() {
+        return null;
+    }
 }

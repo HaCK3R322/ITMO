@@ -3,7 +3,7 @@ package com.androsov.server.internetConnection;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class SystemIOHandler implements ServerIO {
+public class SystemIOHandler implements ServerIOOLD {
     @Override
     public void accept() {
 
