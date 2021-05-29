@@ -15,22 +15,6 @@ import java.util.Scanner;
 
 //вариант 296173
 
-class House {
-    int number;
-    public House(int num) {
-        number = num;
-    }
-}
-
-class Person {
-    House house;
-    int personNumber;
-    Person(int hn, int pn) {
-        house = new House(hn);
-        personNumber = pn;
-    }
-}
-
 public class Client {
     public static void main(String[] args) {Messenger messenger = new EngMessenger();
 

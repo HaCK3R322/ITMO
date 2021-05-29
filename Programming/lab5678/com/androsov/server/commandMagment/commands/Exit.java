@@ -1,7 +1,11 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.response.Response;
+import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
 import com.androsov.server.messengers.MessengersHandler;
+
+import java.util.List;
 
 public class Exit extends ListCommand {
     MessengersHandler messenger;
@@ -16,8 +20,10 @@ public class Exit extends ListCommand {
     }
 
     @Override
-    public String execute(String[] args) {
-        return "\0";
+    public Response execute(List<Object> args) {
+        Response response = new ResponseImpl();
+        response.setMessage("\0");
+        return response;
     }
 
     @Override
