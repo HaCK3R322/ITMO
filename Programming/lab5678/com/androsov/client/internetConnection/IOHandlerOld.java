@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class IOHandler implements ClientIO {
+public class IOHandlerOld implements ClientIOold {
     InetAddress serverAddress;
     int serverPort;
     Socket socket;
     DataInputStream in;
     DataOutputStream out;
 
-    public IOHandler() {
+    public IOHandlerOld() {
     }
 
 

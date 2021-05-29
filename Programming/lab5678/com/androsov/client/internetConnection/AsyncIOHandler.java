@@ -9,7 +9,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class AsyncIOHandler implements ClientIO, Closeable {
+public class AsyncIOHandler implements ClientIOold, Closeable {
     final private ByteBuffer buffer = ByteBuffer.allocate(4096);;
     private Selector selector;
     Set<SelectionKey> keys;

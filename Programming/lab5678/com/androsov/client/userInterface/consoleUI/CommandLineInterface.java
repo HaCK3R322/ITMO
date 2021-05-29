@@ -1,27 +1,32 @@
 package com.androsov.client.userInterface.consoleUI;
 
-import com.androsov.client.commandManagment.CommandValidator;
-import com.androsov.client.internetConnection.ClientIO;
+import com.androsov.client.commandManagment.CommandFormatter;
 import com.androsov.client.messenger.EngMessenger;
 import com.androsov.client.messenger.Messenger;
 import com.androsov.client.messenger.RuMessenger;
 import com.androsov.client.userInterface.Ui;
+import com.androsov.general.IO.IO;
+import com.androsov.general.ObjectSerialization;
+import com.androsov.general.request.Request;
+import com.androsov.general.request.RequestImpl;
+import com.androsov.general.response.Response;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class CommandLineInterface implements Ui {
-    ClientIO io;
+    IO io;
     final private Scanner scanner = new Scanner(System.in);
-    final CommandValidator validator;
+    final CommandFormatter formatter;
     Messenger messenger;
 
-    public CommandLineInterface(ClientIO io, Messenger messenger) throws IOException {
+    public CommandLineInterface(IO io, Messenger messenger) throws IOException {
         this.io = io;
         this.messenger = messenger;
 
         io.sendCommandLine("get_commands_formats");
-        validator = new CommandValidator(io.getResponse());
+        formatter = new CommandFormatter(io.getResponse());
     }
 
     /**
@@ -37,6 +42,7 @@ public class CommandLineInterface implements Ui {
 
         while(true) {
             //get new user command from System.in
+            System.out.println(">>> ");
             String command = getCommand();
 
             if(command.equals("exit")) {
@@ -44,26 +50,22 @@ public class CommandLineInterface implements Ui {
             }
 
             //if command not void
-            if(command.split(" ").length > 0) {
-                if(!command.split(" ")[0].equals("change_language")) {
-
-                    //send command - print response
-                    if(validator.isValid(command)) {
-                        io.sendCommandLine(command);
-                        System.out.println(io.getResponse());
-                    } else {
-                        System.out.println(messenger.Wrong_command_or_command_format_try_again());
-                    }
-
+            if(formatter.getLength(command) != 0) {
+                if(formatter.isValid(command)) {
+                    final String name = formatter.getName(command);
+                    final List<Object> args = formatter.getArgs(command);
+                    final Request request = new RequestImpl(name, args);
+                    io.send(ObjectSerialization.serialize(request));
+                    System.out.println(((Response) io.get()).getMessage());
                 } else {
-                    if(command.split(" ").length > 1) {
+                    System.out.println(messenger.Wrong_command_or_command_format_try_again());
+                    break;
+                }
+
+                if(formatter.getName(command).equals("change_language")) {
+                    if(command.split(" ").length == 2) {
                         messenger = changeLanguage(command.split(" ")[1]);
-                    } else {
-                        System.out.println("Please enter new language: ");
-                        messenger = changeLanguage(getCommand());
                     }
-                    io.sendCommandLine(command);
-                    System.out.println(io.getResponse());
                 }
             }
         }

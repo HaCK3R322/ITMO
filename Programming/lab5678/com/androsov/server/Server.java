@@ -85,7 +85,7 @@ public class Server {
                     commandLine = asyncIO.getCommandLine();
                     if(!commandLine.equals("wait") && !commandLine.equals("")) {
                         System.out.println("Got command line from client (" + asyncIO.getCurrentSocketAddress() + "): " + commandLine);
-                        asyncIO.sendResponse(commandHandler.executeCommand(commandLine));
+                        //asyncIO.sendResponse(commandHandler.executeCommand(commandLine));
                     }
                     asyncIO.removeCurrentKey();
                 }

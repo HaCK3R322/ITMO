@@ -1,11 +1,8 @@
 package com.androsov.client.commandManagment;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
-public class CommandValidator {
+public class CommandFormatter {
     public static HashMap<String, Class> toClassMap;
     HashMap<String, LinkedList<Class>> commandsArguments;
 
@@ -14,7 +11,7 @@ public class CommandValidator {
      * Создаёт на основе ответа от сервера набор команд и аргументов, которые можно использовать с этими командами
      * @param commandsArguments
      */
-    public CommandValidator(String commandsArguments) {
+    public CommandFormatter(String commandsArguments) {
         this.commandsArguments = new HashMap<>();
 
         toClassMap = new HashMap<>();
@@ -67,12 +64,46 @@ public class CommandValidator {
         }
     }
 
+    public int getLength(String commandLine) {
+        return commandLine.split(" ").length;
+    }
+
+    public String getName(String commandLine) {
+        return commandLine.split(" ")[0];
+    }
+
+    public List<Object> getArgs(String commandLine) {
+        final List<Object> args = new LinkedList<>();
+
+        String[] splattedCommandLine = commandLine.split(" ");
+
+        int numberOfArgs = splattedCommandLine.length - 1;
+
+        if (numberOfArgs > 0) {
+            String[] argsStringFormat = Arrays.copyOfRange(splattedCommandLine, 1, splattedCommandLine.length - 1);
+            for (int i = 0; i < argsStringFormat.length; i++) {
+                args.add(getObjectForm(argsStringFormat[i]));
+            }
+        }
+
+        return args;
+    }
+
+    protected static Object getObjectForm(String arg) {
+        Class argClass = getClass(arg);
+        if (argClass.equals(Long.class))
+            return Long.parseLong(arg);
+        else if (argClass.equals(Double.class))
+            return Double.parseDouble(arg);
+        else return arg;
+    }
+
     /**
      * возвращает подходящий тип класса для данного аргумента
      * @param value
      * @return
      */
-    protected Class getClass(String value) {
+    protected static Class getClass(String value) {
         try(Scanner sc = new Scanner(value)) {
             if (sc.hasNextLong())
                 return Long.class;

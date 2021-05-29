@@ -1,10 +1,17 @@
 package com.androsov.client.internetConnection;
 
-import java.io.Closeable;
-import java.io.IOException;
+import com.androsov.general.IO.IO;
 
-public interface ClientIO {
-    void connectToServer(String ipAddress, int port) throws IOException;
-    void sendCommandLine(String line) throws IOException;
-    String getResponse() throws IOException;
+import java.nio.ByteBuffer;
+
+public class ClientIO implements IO {
+    @Override
+    public void send(ByteBuffer buffer) {
+
+    }
+
+    @Override
+    public ByteBuffer get() {
+        return null;
+    }
 }
