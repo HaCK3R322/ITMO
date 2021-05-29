@@ -1,3 +1,18 @@
 Работа над IO:
     скорее всего io должно передавать просто массивы байтов, которые являтся сериализованными Response/Request
     так чот необходимо реализвать сериализацию и десериализацию этой дичи
+    
+    возможно имеет смысл вообще разделить io на отдельные классы создания запросов и отправки ответов
+    т.е. 
+    
+    ```
+    final RequestGetter requestGetter = new RequestGetter();
+    final ResponseSender responseSender = new ResponseSender();
+    //// some code
+    while(requestsGetter.hasNext()) {
+        final request = requestsGetter.next();
+        responseSender.send(commandHandler.execute(request));
+    }
+    ```
+    
+    может быть даже не нужно сильно менять io на стороне сервера и в отправке/принятии пользоваться им
