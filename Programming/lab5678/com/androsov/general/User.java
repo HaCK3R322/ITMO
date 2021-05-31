@@ -13,7 +13,7 @@ public class User {
         this.password = password;
     }
 
-    final InetAddress userAddress;
+    final public InetAddress userAddress; //TODO generate getter and setter
     private String nickname;
     private String password;
 
@@ -35,8 +35,9 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj.getClass().equals(User.class))
-            if (((User) obj).getNickname().equals(nickname)) return true;
+        if (obj.getClass().equals(User.class)) {
+            return ((User) obj).getNickname().equals(nickname);
+        }
         //if not equals
         return false;
     }

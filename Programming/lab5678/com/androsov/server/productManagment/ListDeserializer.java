@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ListDeserializer {
-    private ProductBuilder productBuilder;
+    private final ProductBuilder productBuilder;
 
     public ListDeserializer(ProductBuilder productBuilder) {
         this.productBuilder = productBuilder;

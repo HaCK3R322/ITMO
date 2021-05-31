@@ -3,11 +3,9 @@ package com.androsov.server;
 import com.androsov.general.IO.IO;
 import com.androsov.general.ObjectSerialization;
 import com.androsov.general.request.Request;
-import com.androsov.general.request.RequestImpl;
 import com.androsov.general.response.Response;
 import com.androsov.server.commandMagment.CommandHandler;
 import com.androsov.server.commandMagment.commands.*;
-import com.androsov.server.internetConnection.AsyncIOHandler;
 import com.androsov.server.internetConnection.ServerIO;
 import com.androsov.server.lab5Plains.Product;
 import com.androsov.server.messengers.MessengersHandler;
@@ -21,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Server {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         final String PRODUCT_LIST_ENV = "LAB5_CONTENT";
         File lab5ContentFile;
 
@@ -73,16 +71,25 @@ public class Server {
 
         while (true) {
             try {
+                serverIO.select();
+                serverIO.acceptAll();
                 while (serverIO.hasRequest()) {
+                    //TODO if has request, create new thread, execute, add response to pool
                     final Request request = (Request) ObjectSerialization.deserialize(io.get());
-                    serverIO.setUser(request.getUser());
                     final Response response = commandHandler.executeCommand(request);
+
+                    serverIO.setUser(response.getUser());
                     io.send(ObjectSerialization.serialize(response));
                 }
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
+
+        /*
+        если имеется запрос, создается отдельный поток для его чтения и обработки, ответ складывается в очередь
+        если очередь не пуста (отработал любой из потоков выше), отправляем ответ куда надо
+         */
 
 //        String commandLine;
 //        while (true) {

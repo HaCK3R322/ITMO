@@ -1,5 +1,7 @@
 package com.androsov.general.response;
 
+import com.androsov.general.User;
+
 import java.util.List;
 
 public interface Response {
@@ -10,5 +12,5 @@ public interface Response {
     void setData(List<Object> data);
     void addData(Object obj);
 
-
+    User getUser();
 }

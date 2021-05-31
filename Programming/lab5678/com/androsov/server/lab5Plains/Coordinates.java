@@ -4,16 +4,16 @@ import com.androsov.server.productManagment.exceptions.ContentException;
 public class Coordinates {
     public Coordinates(double x, double y) throws ContentException {
         this.x = x;
-        this.y = new Double(y);
+        this.y = y;
     }
 
-    private double x;
-    private Double y;
+    private final double x;
+    private final Double y;
 
     public double getX() {
         return x;
     }
     public double getY() {
-        return y.doubleValue();
+        return y;
     }
 }

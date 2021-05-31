@@ -12,7 +12,7 @@ public class CommandStructureChecker {
             for(Field field : current.getDeclaredFields()) {
                 try {
                     if (field.get(command) == null) throw new CommandBuildError("In command " + commandClass.getName() + " field \"" + field.getName() + "\" is null!");
-                } catch (IllegalAccessException e) {
+                } catch (IllegalAccessException ignored) {
 
                 }
             }

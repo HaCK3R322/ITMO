@@ -1,8 +1,6 @@
 package com.androsov.client;
 
-import com.androsov.client.internetConnection.AsyncIOHandler;
 import com.androsov.client.internetConnection.ClientIO;
-import com.androsov.client.internetConnection.ClientIOold;
 import com.androsov.client.messenger.EngMessenger;
 import com.androsov.client.messenger.Messenger;
 import com.androsov.client.userInterface.Ui;
@@ -40,11 +38,14 @@ public class Client {
                     System.out.println("Incorrect address: " + e.getMessage() + "\nTry again.");
                     continue;
                 }
+
                 user = new User(InetAddress.getLocalHost());
+                System.out.println("Your address: " + user.userAddress.getCanonicalHostName());
+
                 ui = new CommandLineInterface(io, messenger, user);
 
                 ui.init();
-                if(ui.askReconnect() != true) {
+                if(!ui.askReconnect()) {
                     break;
                 }
             } catch (IOException e) {

@@ -1,6 +1,5 @@
 package com.androsov.client.internetConnection;
 
-import java.io.Closeable;
 import java.io.IOException;
 
 public interface ClientIOold {

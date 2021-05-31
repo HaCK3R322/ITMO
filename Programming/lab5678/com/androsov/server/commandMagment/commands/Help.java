@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Help extends ListCommand {
-    CommandHandler commandHandler;
-    MessengersHandler messenger;
+    final CommandHandler commandHandler;
+    final MessengersHandler messenger;
 
     public Help(CommandHandler commandHandler, MessengersHandler messenger) {
         this.commandHandler = commandHandler;
@@ -26,8 +26,9 @@ public class Help extends ListCommand {
     }
 
     @Override
-    public Response execute(List<Object> args) {
-        Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        Response response = new ResponseImpl(request.getUser());
 
         StringBuilder sb = new StringBuilder();
         if(args.size() != 0) {

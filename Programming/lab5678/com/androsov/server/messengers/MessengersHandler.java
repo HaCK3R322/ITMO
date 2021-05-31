@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MessengersHandler {
-    public HashMap<String, Messenger> messengers;
+    public final HashMap<String, Messenger> messengers;
 
     Messenger messenger;
 

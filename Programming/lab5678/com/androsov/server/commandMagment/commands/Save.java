@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
@@ -12,9 +13,9 @@ import java.io.IOException;
 import java.util.List;
 
 public class Save extends ListCommand {
-    File file;
-    MessengersHandler messenger;
-    List<Product> list;
+    final File file;
+    final MessengersHandler messenger;
+    final List<Product> list;
 
     public Save(List<Product> list, File file, MessengersHandler messenger) {
         this.list = list;
@@ -28,8 +29,9 @@ public class Save extends ListCommand {
     }
 
     @Override
-    public Response execute(List<Object> args) {
-        final Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        final Response response = new ResponseImpl(request.getUser());
         String result;
 
         if(args.size() == 0) {

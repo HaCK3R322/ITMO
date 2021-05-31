@@ -11,11 +11,11 @@ public class Person {
         this.nationality = nationality;
     }
 
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private long height; //Значение поля должно быть больше 0
-    private Color eyeColor; //Поле не может быть null
-    private Color hairColor; //Поле может быть null
-    private Country nationality; //Поле не может быть null
+    private final String name; //Поле не может быть null, Строка не может быть пустой
+    private final long height; //Значение поля должно быть больше 0
+    private final Color eyeColor; //Поле не может быть null
+    private final Color hairColor; //Поле может быть null
+    private final Country nationality; //Поле не может быть null
 
     public void CheckParams() throws ContentException {
         if(name == null || name.equals(""))

@@ -53,26 +53,26 @@ public abstract class Messenger {
                 Enter_owner_nationality,
                 That_type_of_nationality_doesnt_supports_Supported_nationality_GERMANY_THAILAND_JAPAN_Try_again;
     }
-    Add add;
+    final Add add;
 
     public static class AverageOfManufactureCost {
         public String description;
 
     }
-    AverageOfManufactureCost averageOfManufactureCost;
+    final AverageOfManufactureCost averageOfManufactureCost;
 
     public static class Clear {
         public String description,
         result;
     }
-    Clear clear;
+    final Clear clear;
 
     public static class CountByPrice {
         public String description,
         Wrong_number_format,
         Please_enter_argument;
     }
-    CountByPrice countByPrice;
+    final CountByPrice countByPrice;
 
     public static class ExecuteScript {
         public String description,
@@ -81,24 +81,24 @@ public abstract class Messenger {
         Please_enter_script_name,
         Script_error;
     }
-    ExecuteScript executeScript;
+    final ExecuteScript executeScript;
 
     public static class Exit {
         public String description;
     }
-    Exit exit;
+    final Exit exit;
 
     public static class Help {
         public String description,
         doesnt_have_description;
     }
-    Help help;
+    final Help help;
 
     public static class History {
         public String description,
         history;
     }
-    History history;
+    final History history;
 
     public static class Info {
         public String description,
@@ -107,7 +107,7 @@ public abstract class Messenger {
         initialization_date,
         number_of_elements;
     }
-    Info info;
+    final Info info;
 
     public static class RemoveById {
         public String description,
@@ -116,14 +116,14 @@ public abstract class Messenger {
         Wrong_id_format_Please_enter_long_format_argument,
         Please_enter_id;
     }
-    RemoveById removeById;
+    final RemoveById removeById;
 
     public static class RemoveByManufactureCost {
         public String description,
         Wrong_id_format_Please_enter_long_format_argument,
         Please_enter_cost;
     }
-    RemoveByManufactureCost removeByManufactureCost;
+    final RemoveByManufactureCost removeByManufactureCost;
 
     public static class RemoveFirst {
         public String description,
@@ -131,24 +131,24 @@ public abstract class Messenger {
         was_removed,
         List_is_already_empty;
     }
-    RemoveFirst removeFirst;
+    final RemoveFirst removeFirst;
 
     public static class Save {
         public String description,
         saved;
     }
-    Save save;
+    final Save save;
 
     public static class Show {
         public String description;
     }
-    Show show;
+    final Show show;
 
     public static class Sort {
         public String description,
         Sorted;
     }
-    Sort sort;
+    final Sort sort;
 
     public static class UpdateById {
         public String description,
@@ -157,5 +157,5 @@ public abstract class Messenger {
         Build_exception,
         Please_enter_id;
     }
-    UpdateById updateById;
+    final UpdateById updateById;
 }

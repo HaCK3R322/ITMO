@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
@@ -8,7 +9,7 @@ import com.androsov.server.messengers.MessengersHandler;
 import java.util.List;
 
 public class Exit extends ListCommand {
-    MessengersHandler messenger;
+    final MessengersHandler messenger;
 
     public Exit(MessengersHandler messenger) {
         this.messenger = messenger;
@@ -20,8 +21,9 @@ public class Exit extends ListCommand {
     }
 
     @Override
-    public Response execute(List<Object> args) {
-        Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        Response response = new ResponseImpl(request.getUser());
         response.setMessage("\0");
         return response;
     }

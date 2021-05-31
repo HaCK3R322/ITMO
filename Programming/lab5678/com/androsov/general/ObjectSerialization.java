@@ -20,7 +20,7 @@ public class ObjectSerialization {
     public static Object deserialize(ByteBuffer buffer) throws IOException {
         Object object = null; //может быть поправить, может нет
 
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(buffer.array()));
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(buffer.array()))
         ) {
             try {
                 object = objectInputStream.readObject();

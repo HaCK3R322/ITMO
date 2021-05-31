@@ -1,7 +1,5 @@
 package com.androsov.server.internetConnection;
 
-import com.androsov.server.commandMagment.Command;
-
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -10,7 +8,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 
 /**

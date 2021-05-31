@@ -31,4 +31,7 @@ public class RequestImpl implements Request {
     public List<Object> getArgs() {
         return argsList;
     }
+
+    @Override
+    public User getUser() { return user; }
 }

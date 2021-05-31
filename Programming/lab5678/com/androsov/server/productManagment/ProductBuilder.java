@@ -19,7 +19,7 @@ public class ProductBuilder {
     }
 
     public long idToAssign;
-    public List<String> usedPartNumbers;
+    public final List<String> usedPartNumbers;
 
     public static class ProductImitator {
         public String name;

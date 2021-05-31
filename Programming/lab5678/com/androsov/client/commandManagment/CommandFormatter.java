@@ -4,7 +4,7 @@ import java.util.*;
 
 public class CommandFormatter {
     public static HashMap<String, Class> toClassMap;
-    HashMap<String, LinkedList<Class>> commandsArguments;
+    final HashMap<String, LinkedList<Class>> commandsArguments;
 
 
     /**
@@ -26,13 +26,13 @@ public class CommandFormatter {
 
         String[] arrayOfCommands = commandsArguments.split("\n");
 
-        for(int i = 0; i < arrayOfCommands.length; i++) {
-            String commandName = arrayOfCommands[i].split(" ")[0];
-            String[] commandArguments = arrayOfCommands[i].split(" ")[1].split("\\|");
+        for (String arrayOfCommand : arrayOfCommands) {
+            String commandName = arrayOfCommand.split(" ")[0];
+            String[] commandArguments = arrayOfCommand.split(" ")[1].split("\\|");
             try {
                 LinkedList<Class> commandArgumentsClassRepresentation = new LinkedList<>(); // создаем лист для перевода из String формы в Class
-                for(int j = 0; j < commandArguments.length; j++) {
-                    commandArgumentsClassRepresentation.add(toClassMap.get(commandArguments[j])); // добавляем
+                for (String commandArgument : commandArguments) {
+                    commandArgumentsClassRepresentation.add(toClassMap.get(commandArgument)); // добавляем
                 }
                 this.commandsArguments.put(commandName, commandArgumentsClassRepresentation); // запихиваем в мапу
             } catch (NullPointerException e) {
@@ -68,11 +68,11 @@ public class CommandFormatter {
         return commandLine.split(" ").length;
     }
 
-    public String getName(String commandLine) {
+    public String extractName(String commandLine) {
         return commandLine.split(" ")[0];
     }
 
-    public List<Object> getArgs(String commandLine) {
+    public List<Object> extractArgs(String commandLine) {
         final List<Object> args = new LinkedList<>();
 
         String[] splattedCommandLine = commandLine.split(" ");
@@ -81,8 +81,8 @@ public class CommandFormatter {
 
         if (numberOfArgs > 0) {
             String[] argsStringFormat = Arrays.copyOfRange(splattedCommandLine, 1, splattedCommandLine.length - 1);
-            for (int i = 0; i < argsStringFormat.length; i++) {
-                args.add(getObjectForm(argsStringFormat[i]));
+            for (String s : argsStringFormat) {
+                args.add(getObjectForm(s));
             }
         }
 

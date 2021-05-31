@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.Command;
@@ -8,11 +9,10 @@ import com.androsov.server.messengers.MessengersHandler;
 import com.androsov.server.lab5Plains.Product;
 
 import java.util.List;
-import java.util.Objects;
 
 public class AverageOfManufactureCost extends ListCommand implements Command {
-    MessengersHandler messenger;
-    List<Product> list;
+    final MessengersHandler messenger;
+    final List<Product> list;
 
     public AverageOfManufactureCost(List<Product> list, MessengersHandler messenger) {
         this.list = list;
@@ -24,8 +24,9 @@ public class AverageOfManufactureCost extends ListCommand implements Command {
         userAccessible = true;
     }
 
-    public Response execute(List<Object> args) {
-        Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        Response response = new ResponseImpl(request.getUser());
         float average = (float)list.stream()
                 .map(Product::getManufactureCost)
                 .mapToDouble(cost -> cost)

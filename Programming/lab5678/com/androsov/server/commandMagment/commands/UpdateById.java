@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
@@ -11,11 +12,11 @@ import com.androsov.server.productManagment.exceptions.ContentException;
 import java.util.List;
 
 public class UpdateById extends ListCommand {
-    ProductBuilder productBuilder;
-    MessengersHandler messenger;
-    List<Product> list;
+    final ProductBuilder productBuilder;
+    final MessengersHandler messenger;
+    final List<Product> list;
 
-    Add add;
+    final Add add;
 
     public UpdateById(List<Product> list, ProductBuilder productBuilder, MessengersHandler messenger) {
         this.list = list;
@@ -31,8 +32,9 @@ public class UpdateById extends ListCommand {
     }
 
     @Override
-    public Response execute(List<Object> args) {
-        final Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        final Response response = new ResponseImpl(request.getUser());
         String result;
 
         if(args.size() > 0) {
@@ -40,9 +42,9 @@ public class UpdateById extends ListCommand {
                 Long id = (Long)args.get(0);
                 args.remove(0);
                 String partNumber = null;
-                for(int i = 0; i < list.size(); i++) {
-                    if(list.get(i).getId() == id) {
-                        partNumber = list.get(i).getPartNumber();
+                for (Product product : list) {
+                    if (product.getId() == id) {
+                        partNumber = product.getPartNumber();
                         break;
                     }
                 }

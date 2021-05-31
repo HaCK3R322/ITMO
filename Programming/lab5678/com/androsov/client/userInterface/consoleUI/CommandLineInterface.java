@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CommandLineInterface implements Ui {
-    User user;
+    final private User user;
 
-    IO io;
+    final private IO io;
     final private Scanner scanner = new Scanner(System.in);
-    final CommandFormatter formatter;
-    Messenger messenger;
+    final private CommandFormatter formatter;
+    private Messenger messenger;
 
     public CommandLineInterface(IO io, Messenger messenger, User user) throws IOException {
         this.user = user;
@@ -56,8 +56,8 @@ public class CommandLineInterface implements Ui {
             //if command not void
             if(formatter.getLength(command) != 0) {
                 if(formatter.isValid(command)) {
-                    final String name = formatter.getName(command);
-                    final List<Object> args = formatter.getArgs(command);
+                    final String name = formatter.extractName(command);
+                    final List<Object> args = formatter.extractArgs(command);
                     final Request request = new RequestImpl(name, args, user);
                     io.send(ObjectSerialization.serialize(request));
                     System.out.println(((Response) io.get()).getMessage());
@@ -66,7 +66,7 @@ public class CommandLineInterface implements Ui {
                     break;
                 }
 
-                if(formatter.getName(command).equals("change_language")) {
+                if(formatter.extractName(command).equals("change_language")) {
                     if(command.split(" ").length == 2) {
                         messenger = changeLanguage(command.split(" ")[1]);
                     }
@@ -79,12 +79,7 @@ public class CommandLineInterface implements Ui {
     public boolean endSession() {
         System.out.println("Do you really wanna exit? (type yes|y  to to end program or type any other key to continue work)");
         String answer = scanner.nextLine();
-        if((answer.toLowerCase().equals("y") || answer.toLowerCase().equals("yes"))) {
-
-            return true;
-        } else {
-            return false;
-        }
+        return answer.toLowerCase().equals("y") || answer.toLowerCase().equals("yes");
     }
 
     @Override

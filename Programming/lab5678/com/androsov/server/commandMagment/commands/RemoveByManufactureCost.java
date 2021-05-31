@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
@@ -9,8 +10,8 @@ import com.androsov.server.lab5Plains.Product;
 import java.util.List;
 
 public class RemoveByManufactureCost extends ListCommand {
-    MessengersHandler messenger;
-    List<Product> list;
+    final MessengersHandler messenger;
+    final List<Product> list;
 
     public RemoveByManufactureCost(List<Product> list, MessengersHandler messenger) {
         this.list = list;
@@ -23,8 +24,9 @@ public class RemoveByManufactureCost extends ListCommand {
     }
 
     @Override
-    public Response execute(List<Object> args) {
-        final Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        final Response response = new ResponseImpl(request.getUser());
         String result = "";
         if(args.size() > 0) {
             try {

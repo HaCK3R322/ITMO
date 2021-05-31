@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
@@ -13,9 +14,9 @@ import java.io.IOException;
 import java.util.List;
 
 public class Add extends ListCommand {
-    List<Product> list;
-    ProductBuilder productBuilder;
-    MessengersHandler messenger;
+    final List<Product> list;
+    final ProductBuilder productBuilder;
+    final MessengersHandler messenger;
 
     public Add(List<Product> list, ProductBuilder productBuilder, MessengersHandler messenger) {
         this.list = list;
@@ -28,10 +29,11 @@ public class Add extends ListCommand {
         userAccessible = true;
     }
 
-    //решить: делать такой продукт на стороне клиента или на стороне сервера
+    //решить: делать такой продукт на стороне клиента или на стороне сервера (в аргументах должны быть именно имитаторы)
     @Override
-    public Response execute(List<Object> args) {
-        Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        Response response = new ResponseImpl(request.getUser());
 
         StringBuilder stringBuilder = new StringBuilder();
         for (Object object: args) {
@@ -191,8 +193,8 @@ public class Add extends ListCommand {
         while(statementNotPicked) {
             productPartNumber = io.getCommandLine();
             boolean partNumberAlreadyUsed = false;
-            for(int i = 0; i < usedPartNumbers.size(); i++) {
-                if (productPartNumber.equals(usedPartNumbers.get(i))) {
+            for (String usedPartNumber : usedPartNumbers) {
+                if (productPartNumber.equals(usedPartNumber)) {
                     partNumberAlreadyUsed = true;
                     break;
                 }

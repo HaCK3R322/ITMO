@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.CommandHandler;
@@ -9,8 +10,8 @@ import com.androsov.server.messengers.MessengersHandler;
 import java.util.List;
 
 public class History extends ListCommand {
-    CommandHandler commandHandler;
-    MessengersHandler messenger;
+    final CommandHandler commandHandler;
+    final MessengersHandler messenger;
 
     public History(CommandHandler commandHandler, MessengersHandler messenger) {
         this.messenger = messenger;
@@ -23,10 +24,11 @@ public class History extends ListCommand {
     }
 
     @Override
-    public Response execute(List<Object> args) {
-        Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        Response response = new ResponseImpl(request.getUser());
 
-        String result = messenger.History().history + ":\n";
+        StringBuilder result = new StringBuilder(messenger.History().history + ":\n");
 
         int NUMBER_OF_LAST_COMMANDS_TO_SHOW = 12;
 
@@ -35,11 +37,11 @@ public class History extends ListCommand {
                 historySize - Math.min(historySize, NUMBER_OF_LAST_COMMANDS_TO_SHOW), historySize
         );
 
-        for(int i = 0; i < lastCommands.size(); i++) {
-            result += "   - " + lastCommands.get(i) + "\n";
+        for (String lastCommand : lastCommands) {
+            result.append("   - ").append(lastCommand).append("\n");
         }
 
-        response.setMessage(result);
+        response.setMessage(result.toString());
 
         return response;
     }

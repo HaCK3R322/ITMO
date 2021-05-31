@@ -1,10 +1,17 @@
 package com.androsov.general.response;
 
+import com.androsov.general.User;
+
 import java.util.List;
 
 public class ResponseImpl implements Response {
     String message;
     List<Object> data;
+    User user;
+
+    public ResponseImpl(User user) {
+        this.user = user;
+    }
 
     @Override
     public String getMessage() {
@@ -29,5 +36,10 @@ public class ResponseImpl implements Response {
     @Override
     public void addData(Object obj) {
         data.add(obj);
+    }
+
+    @Override
+    public User getUser() {
+        return user;
     }
 }

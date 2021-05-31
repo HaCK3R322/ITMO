@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
@@ -9,8 +10,8 @@ import com.androsov.server.lab5Plains.Product;
 import java.util.List;
 
 public class Clear extends ListCommand {
-    MessengersHandler messenger;
-    List<Product> list;
+    final MessengersHandler messenger;
+    final List<Product> list;
 
     public Clear(List<Product> list, MessengersHandler messenger) {
         this.list = list;
@@ -22,8 +23,9 @@ public class Clear extends ListCommand {
         userAccessible = true;
     }
 
-    public Response execute(List<Object> args) {
-        Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        Response response = new ResponseImpl(request.getUser());
 
         response.setMessage(execute(new String[]{}));
 

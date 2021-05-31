@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
@@ -9,8 +10,8 @@ import com.androsov.server.lab5Plains.Product;
 import java.util.List;
 
 public class Sort extends ListCommand {
-    MessengersHandler messenger;
-    List<Product> list;
+    final MessengersHandler messenger;
+    final List<Product> list;
 
     public Sort(List<Product> list, MessengersHandler messenger) {
         this.list = list;
@@ -23,9 +24,10 @@ public class Sort extends ListCommand {
     }
 
     @Override
-    public Response execute(List<Object> args) {
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        final Response response = new ResponseImpl(request.getUser());
         list.sort(Product::compareTo);
-        final Response response = new ResponseImpl();
         response.setMessage(messenger.Sort().Sorted);
         return response;
     }

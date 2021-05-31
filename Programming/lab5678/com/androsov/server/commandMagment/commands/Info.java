@@ -1,5 +1,6 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.request.Request;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.ListCommand;
@@ -10,9 +11,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Info extends ListCommand {
-    LocalDateTime initializationTime;
-    MessengersHandler messenger;
-    List<Product> list;
+    final LocalDateTime initializationTime;
+    final MessengersHandler messenger;
+    final List<Product> list;
 
     public Info(List<Product> list, LocalDateTime initializationTime, MessengersHandler messenger) {
         this.list = list;
@@ -26,8 +27,9 @@ public class Info extends ListCommand {
     }
 
     @Override
-    public Response execute(List<Object> args) {
-        final Response response = new ResponseImpl();
+    public Response execute(Request request) {
+        List<Object> args = request.getArgs();
+        final Response response = new ResponseImpl(request.getUser());
 
         response.setMessage((messenger.Info().Collection_info + ":" + "\n" +
                 "   " + messenger.Info().type_Linked_list + " " + "\n" +
