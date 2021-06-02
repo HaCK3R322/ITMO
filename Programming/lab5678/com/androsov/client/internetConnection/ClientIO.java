@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
@@ -16,6 +17,7 @@ public class ClientIO implements IO, Closeable {
 
     public void connectToServer(String serverIP, int serverPort) throws IOException {
         socket = new Socket(serverIP, serverPort);
+        System.out.println(socket.getLocalSocketAddress());
     }
 
     @Override
@@ -42,5 +44,9 @@ public class ClientIO implements IO, Closeable {
     @Override
     public void close() throws IOException {
         socket.close();
+    }
+
+    public SocketAddress getLocalAddress() {
+        return socket.getLocalSocketAddress();
     }
 }

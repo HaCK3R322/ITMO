@@ -2,19 +2,20 @@ package com.androsov.general;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.SocketAddress;
 
 public class User implements Serializable {
-    public User(InetAddress userAddress) {
+    public User(SocketAddress userAddress) {
         this.userAddress = userAddress;
     }
 
-    public User(InetAddress userAddress, String nickname, String password) {
+    public User(SocketAddress userAddress, String nickname, String password) {
         this.userAddress = userAddress;
         this.nickname = nickname;
         this.password = password;
     }
 
-    private InetAddress userAddress;
+    private SocketAddress userAddress;
     private String nickname;
     private String password;
 
@@ -34,11 +35,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public InetAddress getUserAddress() {
+    public SocketAddress getUserAddress() {
         return userAddress;
     }
 
-    public void setUserAddress(InetAddress userAddress) {
+    public void setUserAddress(SocketAddress userAddress) {
         this.userAddress = userAddress;
     }
 

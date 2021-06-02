@@ -38,10 +38,10 @@ public class ServerIO implements IO {
         for(int i = 0; i < keys.size(); i++) {
             final SelectionKey key = keyIterator.next();
             if (key.isAcceptable()) {
-                final SocketChannel client = serverSocketChannel.accept();
-                client.configureBlocking(false);
-                client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-                System.out.println("Connected client!");
+                final SocketChannel clientSocketChannel = serverSocketChannel.accept();
+                clientSocketChannel.configureBlocking(false);
+                clientSocketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+                System.out.println("Connected client " + clientSocketChannel.socket().getRemoteSocketAddress());
                 keyIterator.remove();
             }
         }
@@ -78,16 +78,16 @@ public class ServerIO implements IO {
 
         for(int i = 0; i < keys.size(); i++) {
             final SelectionKey key = keyIterator.next();
-            if (key.isWritable()) {
-                try {
+            try {
+                if (key.isWritable() && ((SocketChannel) key.channel()).getRemoteAddress().equals(currentUser.getUserAddress())) {
                     ((SocketChannel)key.channel()).write(buffer);
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                    try {
-                        key.channel().close();
-                        ((SocketChannel) key.channel()).socket().close();
-                    } catch (IOException ignored) { }
                 }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                try {
+                    key.channel().close();
+                    ((SocketChannel) key.channel()).socket().close();
+                } catch (IOException ignored) { }
             }
             keyIterator.remove();
         }
