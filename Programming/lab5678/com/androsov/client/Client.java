@@ -40,7 +40,7 @@ public class Client {
                 }
 
                 user = new User(InetAddress.getLocalHost());
-                System.out.println("Your address: " + user.userAddress.getCanonicalHostName());
+                System.out.println("Your address: " + user.getUserAddress().getCanonicalHostName());
 
                 ui = new CommandLineInterface(io, messenger, user);
 

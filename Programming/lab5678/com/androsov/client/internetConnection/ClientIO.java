@@ -27,7 +27,6 @@ public class ClientIO implements IO, Closeable {
         }
     }
 
-    //TODO realize exception output to user
     @Override
     public ByteBuffer get() {
         try {

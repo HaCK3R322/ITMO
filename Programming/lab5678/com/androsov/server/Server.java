@@ -71,7 +71,6 @@ public class Server {
 
         while (true) {
             try {
-                serverIO.select();
                 serverIO.acceptAll();
                 while (serverIO.hasRequest()) {
                     //TODO if has request, create new thread, execute, add response to pool

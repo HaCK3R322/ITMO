@@ -28,13 +28,10 @@ public class ServerIO implements IO {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
     }
 
-    //выбрали какой-то канал
-    public void select() throws IOException {
-        selector.select();
-    }
-
     //смотрим, если он хочет зарегистрироваться, регистрируем
     public void acceptAll() throws IOException {
+        try { selector.select(); } catch (IOException ignored) {}
+
         final Set<SelectionKey> keys = selector.selectedKeys();
         final Iterator<SelectionKey> keyIterator = keys.iterator();
 
@@ -48,22 +45,11 @@ public class ServerIO implements IO {
                 keyIterator.remove();
             }
         }
-
-//        while (keyIterator.hasNext()) {
-//            final SelectionKey key = keyIterator.next();
-//            if (key.isAcceptable()) {
-//                final SocketChannel client = serverSocketChannel.accept();
-//                client.configureBlocking(false);
-//                client.register(selector, SelectionKey.OP_READ);
-//                System.out.println("Connected client!");
-//                keyIterator.remove();
-//                break;
-//            }
-//        }
     }
 
     //если он что-то записал, т.е. кей стал Реадабл, то возвращаем труе
     public boolean hasRequest() {
+        try { selector.select(); } catch (IOException ignored) {}
 
         final Set<SelectionKey> keys = selector.selectedKeys();
         final Iterator<SelectionKey> keyIterator = keys.iterator();
@@ -82,16 +68,11 @@ public class ServerIO implements IO {
         currentUser = user;
     }
 
-    //TODO send get must work with channels
-
+    //TODO отправка должна быть конкретному юзеру (создается пул из респонсов, которые содержат адрес юзера, когда можно, респонс отправляется)
     //отправляем байты нужному юзеру
     @Override
     public void send(ByteBuffer buffer) {
-        try {
-            selector.select();
-        } catch (IOException e) {
-
-        }
+        try { selector.select(); } catch (IOException ignored) {}
         final Set<SelectionKey> keys = selector.selectedKeys();
         final Iterator<SelectionKey> keyIterator = keys.iterator();
 
@@ -114,6 +95,8 @@ public class ServerIO implements IO {
 
     @Override
     public ByteBuffer get() {
+        try { selector.select(); } catch (IOException ignored) {}
+
         final ByteBuffer buffer = ByteBuffer.allocate(16384);
 
         final Set<SelectionKey> keys = selector.selectedKeys();
@@ -129,7 +112,7 @@ public class ServerIO implements IO {
                     try {
                         key.channel().close();
                         ((SocketChannel) key.channel()).socket().close();
-                    } catch (IOException ignored) { }
+                    } catch (IOException ignored) {}
                 }
             }
             keyIterator.remove();

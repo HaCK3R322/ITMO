@@ -14,7 +14,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    final public InetAddress userAddress; //TODO generate getter and setter
+    private InetAddress userAddress;
     private String nickname;
     private String password;
 
@@ -32,6 +32,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public InetAddress getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(InetAddress userAddress) {
+        this.userAddress = userAddress;
     }
 
     @Override
