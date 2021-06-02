@@ -1,6 +1,8 @@
 package com.androsov.server.commandMagment.commands;
 
+import com.androsov.general.CommandFormatter;
 import com.androsov.general.request.Request;
+import com.androsov.general.request.RequestImpl;
 import com.androsov.general.response.Response;
 import com.androsov.general.response.ResponseImpl;
 import com.androsov.server.commandMagment.CommandHandler;
@@ -29,25 +31,26 @@ public class ExecuteScript extends ListCommand {
     public Response execute(Request request) {
         List<Object> args = request.getArgs();
         Response response = new ResponseImpl(request.getUser());
-//        String result = "";
-//
-//        try {
-//            String scriptName = (String) args.get(0);
-//            Script script = new Script(scriptName);
-//
-//            for(int i = 0; i < script.commands.size(); i++) {
-//                result += messenger.ExecuteScript().script + ": " + commandHandler.executeCommand(script.takeCommand()) + '\n';
-//            }
-//
-//            result += "<" + messenger.ExecuteScript().script + scriptName + messenger.ExecuteScript().executed + ".>";
-//
-//        } catch (NullPointerException e) {
-//            result = messenger.ExecuteScript().Please_enter_script_name;
-//        } catch (IOException | SelfCycledScriptChainException e) {
-//            result = "<" + messenger.ExecuteScript().Script_error + ">: " + e.getMessage();
-//        }
-//
-//        response.setMessage(result);
+        String result = "";
+
+        try {
+            String scriptName = (String) args.get(0);
+            Script script = new Script(scriptName);
+
+            for (String commandLine : script.commands) {
+                final Request requestFromScript = new RequestImpl(CommandFormatter.extractName(commandLine), CommandFormatter.extractArgs(commandLine), request.getUser());
+                result += messenger.ExecuteScript().script + ": " + commandHandler.executeCommand(requestFromScript) + '\n';
+            }
+
+            result += "<" + messenger.ExecuteScript().script + scriptName + messenger.ExecuteScript().executed + ".>";
+
+        } catch (NullPointerException e) {
+            result = messenger.ExecuteScript().Please_enter_script_name;
+        } catch (IOException | SelfCycledScriptChainException e) {
+            result = "<" + messenger.ExecuteScript().Script_error + ">: " + e.getMessage();
+        }
+
+        response.setMessage(result);
         return response;
     }
 

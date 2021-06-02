@@ -2,6 +2,7 @@ package com.androsov.general.request;
 
 import com.androsov.general.User;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 

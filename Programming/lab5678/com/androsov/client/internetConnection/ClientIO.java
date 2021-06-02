@@ -20,22 +20,22 @@ public class ClientIO implements IO, Closeable {
 
     @Override
     public void send(ByteBuffer buffer) {
-        try (DataOutputStream out  = new DataOutputStream(socket.getOutputStream())) {
-            out.write(buffer.array());
-        } catch (IOException ignored) {
-
+        try {
+            socket.getOutputStream().write(buffer.array());
+        } catch (IOException e) {
+            System.out.println("Client \"Send\" exception: " + e.getMessage());
         }
     }
 
     //TODO realize exception output to user
     @Override
     public ByteBuffer get() {
-        try (DataInputStream in = new DataInputStream(socket.getInputStream())) {
+        try {
             final ByteBuffer buffer = ByteBuffer.allocate(16384);
-            in.read(buffer.array());
+            socket.getInputStream().read(buffer.array());
             return buffer;
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Client \"Get\" exception: " + e.getMessage());
             return ByteBuffer.allocate(0);
         }
     }

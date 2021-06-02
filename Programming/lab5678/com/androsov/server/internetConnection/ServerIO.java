@@ -38,31 +38,39 @@ public class ServerIO implements IO {
         final Set<SelectionKey> keys = selector.selectedKeys();
         final Iterator<SelectionKey> keyIterator = keys.iterator();
 
-        while (keyIterator.hasNext()) {
+        for(int i = 0; i < keys.size(); i++) {
             final SelectionKey key = keyIterator.next();
-
             if (key.isAcceptable()) {
                 final SocketChannel client = serverSocketChannel.accept();
                 client.configureBlocking(false);
-                client.register(selector, SelectionKey.OP_READ);
+                client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                 System.out.println("Connected client!");
                 keyIterator.remove();
-                break;
             }
         }
+
+//        while (keyIterator.hasNext()) {
+//            final SelectionKey key = keyIterator.next();
+//            if (key.isAcceptable()) {
+//                final SocketChannel client = serverSocketChannel.accept();
+//                client.configureBlocking(false);
+//                client.register(selector, SelectionKey.OP_READ);
+//                System.out.println("Connected client!");
+//                keyIterator.remove();
+//                break;
+//            }
+//        }
     }
 
     //если он что-то записал, т.е. кей стал Реадабл, то возвращаем труе
     public boolean hasRequest() {
+
         final Set<SelectionKey> keys = selector.selectedKeys();
         final Iterator<SelectionKey> keyIterator = keys.iterator();
 
-        while (keyIterator.hasNext()) {
+        for(int i = 0; i < keys.size(); i++) {
             final SelectionKey key = keyIterator.next();
-            System.out.println(key.isReadable() + " " + key.isWritable() + " " + key.isAcceptable());
-
             if (key.isReadable()) {
-                System.out.println("server got request!"); //TODO delete
                 return true;
             }
         }
@@ -79,12 +87,54 @@ public class ServerIO implements IO {
     //отправляем байты нужному юзеру
     @Override
     public void send(ByteBuffer buffer) {
-        //send response to current user
+        try {
+            selector.select();
+        } catch (IOException e) {
+
+        }
+        final Set<SelectionKey> keys = selector.selectedKeys();
+        final Iterator<SelectionKey> keyIterator = keys.iterator();
+
+        for(int i = 0; i < keys.size(); i++) {
+            final SelectionKey key = keyIterator.next();
+            if (key.isWritable()) {
+                try {
+                    ((SocketChannel)key.channel()).write(buffer);
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                    try {
+                        key.channel().close();
+                        ((SocketChannel) key.channel()).socket().close();
+                    } catch (IOException ignored) { }
+                }
+            }
+            keyIterator.remove();
+        }
     }
 
     @Override
     public ByteBuffer get() {
-        //get serialized request
-        return null;
+        final ByteBuffer buffer = ByteBuffer.allocate(16384);
+
+        final Set<SelectionKey> keys = selector.selectedKeys();
+        final Iterator<SelectionKey> keyIterator = keys.iterator();
+
+        for(int i = 0; i < keys.size(); i++) {
+            final SelectionKey key = keyIterator.next();
+            if (key.isReadable()) {
+                try {
+                    ((SocketChannel)key.channel()).read(buffer);
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                    try {
+                        key.channel().close();
+                        ((SocketChannel) key.channel()).socket().close();
+                    } catch (IOException ignored) { }
+                }
+            }
+            keyIterator.remove();
+        }
+
+        return buffer;
     }
 }

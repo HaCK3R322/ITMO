@@ -1,8 +1,10 @@
 package com.androsov.client.commandManagment;
 
+import com.androsov.general.CommandFormatter;
+
 import java.util.*;
 
-public class CommandFormatter {
+public class CommandValidator {
     public static HashMap<String, Class> toClassMap;
     final HashMap<String, LinkedList<Class>> commandsArguments;
 
@@ -11,7 +13,7 @@ public class CommandFormatter {
      * Создаёт на основе ответа от сервера набор команд и аргументов, которые можно использовать с этими командами
      * @param commandsArguments
      */
-    public CommandFormatter(String commandsArguments) { // переделать под чтение респонса
+    public CommandValidator(String commandsArguments) { // переделать под чтение респонса
         this.commandsArguments = new HashMap<>();
 
         toClassMap = new HashMap<>();
@@ -54,64 +56,13 @@ public class CommandFormatter {
             boolean argumentValid = false;
 
             for(int i = 0; i < commandsArguments.get(commandName).size(); i++) {
-                if(commandsArguments.get(commandName).get(i) == getClass(commandArgument))
+                if(commandsArguments.get(commandName).get(i) == CommandFormatter.getClass(commandArgument))
                     argumentValid = true;
             }
 
             return argumentValid;
         } else {
             return false;
-        }
-    }
-
-    public int getLength(String commandLine) {
-        return commandLine.split(" ").length;
-    }
-
-    public String extractName(String commandLine) {
-        return commandLine.split(" ")[0];
-    }
-
-    public List<Object> extractArgs(String commandLine) {
-        final List<Object> args = new LinkedList<>();
-
-        String[] splattedCommandLine = commandLine.split(" ");
-
-        int numberOfArgs = splattedCommandLine.length - 1;
-
-        if (numberOfArgs > 0) {
-            String[] argsStringFormat = Arrays.copyOfRange(splattedCommandLine, 1, splattedCommandLine.length - 1);
-            for (String s : argsStringFormat) {
-                args.add(getObjectForm(s));
-            }
-        }
-
-        return args;
-    }
-
-    protected static Object getObjectForm(String arg) {
-        Class argClass = getClass(arg);
-        if (argClass.equals(Long.class))
-            return Long.parseLong(arg);
-        else if (argClass.equals(Double.class))
-            return Double.parseDouble(arg);
-        else return arg;
-    }
-
-    /**
-     * возвращает подходящий тип класса для данного аргумента
-     * @param value
-     * @return
-     */
-    protected static Class getClass(String value) {
-        try(Scanner sc = new Scanner(value)) {
-            if (sc.hasNextLong())
-                return Long.class;
-            else if (sc.hasNextDouble())
-                return Double.class;
-            else if(sc.hasNextLine())
-                return String.class;
-            else return null;
         }
     }
 }

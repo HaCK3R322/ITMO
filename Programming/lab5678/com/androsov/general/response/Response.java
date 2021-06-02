@@ -2,9 +2,10 @@ package com.androsov.general.response;
 
 import com.androsov.general.User;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface Response {
+public interface Response extends Serializable {
     String getMessage();
     void setMessage(String str);
 

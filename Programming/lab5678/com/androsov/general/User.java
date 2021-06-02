@@ -1,8 +1,9 @@
 package com.androsov.general;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 
-public class User {
+public class User implements Serializable {
     public User(InetAddress userAddress) {
         this.userAddress = userAddress;
     }

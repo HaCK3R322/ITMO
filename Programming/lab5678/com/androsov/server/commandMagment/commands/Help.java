@@ -39,7 +39,6 @@ public class Help extends ListCommand {
                 sb.append("\n");
             }
             sb.deleteCharAt(sb.length() - 1);
-            response.setMessage(sb.toString());
         } else {
             sb.append("list of languages: ").append(messenger.getAllLangsNames()).append("\n\n");
             for (Map.Entry<String, Command> commandEntry : commandHandler.commandMap.entrySet()) {
@@ -50,8 +49,8 @@ public class Help extends ListCommand {
                     sb.append("\n");
                 }
             }
-            response.setMessage(sb.toString());
         }
+        response.setMessage(sb.toString());
 
         return response;
     }

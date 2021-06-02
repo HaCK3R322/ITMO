@@ -76,6 +76,7 @@ public class Server {
                 while (serverIO.hasRequest()) {
                     //TODO if has request, create new thread, execute, add response to pool
                     final Request request = (Request) ObjectSerialization.deserialize(io.get());
+                    System.out.println("Got request named " + request.getCommandName());
                     final Response response = commandHandler.executeCommand(request);
 
                     serverIO.setUser(response.getUser());
@@ -85,42 +86,5 @@ public class Server {
                 System.out.println(e.getMessage());
             }
         }
-
-        /*
-        если имеется запрос, создается отдельный поток для его чтения и обработки, ответ складывается в очередь
-        если очередь не пуста (отработал любой из потоков выше), отправляем ответ куда надо
-         */
-
-//        String commandLine;
-//        while (true) {
-//            try {
-//                asyncIO.selector.select();
-//                asyncIO.configureKeys();
-//
-//                while (serverIO.hasRequest()) {
-//                    final Request request = (Request) ObjectSerialization.deserialize(io.get());
-//                    final Response response = commandHandler.executeCommand(request);
-//                    io.send(ObjectSerialization.serialize(response));
-//                }
-//
-//
-//                //key may be "acceptable" or "readable"
-//                while (asyncIO.goToNextKey()) {
-//                    asyncIO.accept();
-//                    commandLine = asyncIO.getCommandLine();
-//                    if(!commandLine.equals("wait") && !commandLine.equals("")) {
-//                        System.out.println("Got command line from client (" + asyncIO.getCurrentSocketAddress() + "): " + commandLine);
-//                        //asyncIO.sendResponse(commandHandler.executeCommand(commandLine));
-//                    }
-//                    asyncIO.removeCurrentKey();
-//                }
-//            } catch (IOException e) {
-//                System.out.println("Server (in work with " + asyncIO.getCurrentSocketAddress() + ") in cycle exception: " + e.getMessage());
-//                asyncIO.closeCurrentChannel();
-//            }
-//        }
-
-        //asyncIO.close();
-        //commandHandler.executeCommand("save");
     }
 }

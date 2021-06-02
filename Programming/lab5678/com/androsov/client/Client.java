@@ -13,7 +13,7 @@ import java.net.InetAddress;
 
 //вариант 296173
 public class Client {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Messenger messenger = new EngMessenger();
 
         User user;
@@ -49,7 +49,7 @@ public class Client {
                     break;
                 }
             } catch (IOException e) {
-                System.out.println("Server connection error: " + e.getMessage());
+                System.out.println("Server connection error: " + e.getLocalizedMessage());
             }
         }
     }

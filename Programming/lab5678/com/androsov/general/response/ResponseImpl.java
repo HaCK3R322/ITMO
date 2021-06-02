@@ -2,12 +2,13 @@ package com.androsov.general.response;
 
 import com.androsov.general.User;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ResponseImpl implements Response {
     String message;
     List<Object> data;
-    User user;
+    final User user;
 
     public ResponseImpl(User user) {
         this.user = user;

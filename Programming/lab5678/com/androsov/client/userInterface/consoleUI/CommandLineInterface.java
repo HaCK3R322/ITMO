@@ -1,10 +1,11 @@
 package com.androsov.client.userInterface.consoleUI;
 
-import com.androsov.client.commandManagment.CommandFormatter;
+import com.androsov.client.commandManagment.CommandValidator;
 import com.androsov.client.messenger.EngMessenger;
 import com.androsov.client.messenger.Messenger;
 import com.androsov.client.messenger.RuMessenger;
 import com.androsov.client.userInterface.Ui;
+import com.androsov.general.CommandFormatter;
 import com.androsov.general.IO.IO;
 import com.androsov.general.ObjectSerialization;
 import com.androsov.general.User;
@@ -21,7 +22,7 @@ public class CommandLineInterface implements Ui {
 
     final private IO io;
     final private Scanner scanner = new Scanner(System.in);
-    final private CommandFormatter formatter;
+    final private CommandValidator validator;
     private Messenger messenger;
 
     public CommandLineInterface(IO io, Messenger messenger, User user) throws IOException {
@@ -30,7 +31,7 @@ public class CommandLineInterface implements Ui {
         this.messenger = messenger;
 
         io.send(ObjectSerialization.serialize(new RequestImpl("get_commands_formats", user)));
-        formatter = new CommandFormatter(((Response) io.get()).getMessage());
+        validator = new CommandValidator(((Response) ObjectSerialization.deserialize(io.get())).getMessage());
     }
 
     /**
@@ -40,13 +41,13 @@ public class CommandLineInterface implements Ui {
     @Override
     public void init() throws IOException {
         io.send(ObjectSerialization.serialize(new RequestImpl("help", user)));
-        System.out.println(((Response) io.get()).getMessage());
+        System.out.println(((Response) ObjectSerialization.deserialize(io.get())).getMessage());
         System.out.println("-------------------------------------------------");
         System.out.println("Type command here:");
 
         while(true) {
             //get new user command from System.in
-            System.out.println(">>> ");
+            System.out.print(">>> ");
             String command = getCommand();
 
             if(command.equals("exit")) {
@@ -54,19 +55,19 @@ public class CommandLineInterface implements Ui {
             }
 
             //if command not void
-            if(formatter.getLength(command) != 0) {
-                if(formatter.isValid(command)) {
-                    final String name = formatter.extractName(command);
-                    final List<Object> args = formatter.extractArgs(command);
+            if(CommandFormatter.getLength(command) != 0) {
+                if(validator.isValid(command)) {
+                    final String name = CommandFormatter.extractName(command);
+                    final List<Object> args = CommandFormatter.extractArgs(command);
                     final Request request = new RequestImpl(name, args, user);
                     io.send(ObjectSerialization.serialize(request));
-                    System.out.println(((Response) io.get()).getMessage());
+                    System.out.println(((Response) ObjectSerialization.deserialize(io.get())).getMessage());
                 } else {
                     System.out.println(messenger.Wrong_command_or_command_format_try_again());
-                    break;
+                    continue;
                 }
 
-                if(formatter.extractName(command).equals("change_language")) {
+                if(CommandFormatter.extractName(command).equals("change_language")) {
                     if(command.split(" ").length == 2) {
                         messenger = changeLanguage(command.split(" ")[1]);
                     }
