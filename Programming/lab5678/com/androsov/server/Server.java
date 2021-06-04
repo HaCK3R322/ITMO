@@ -58,6 +58,21 @@ public class Server {
         LinkedList<Request> listOfRequests = new LinkedList<>();
         LinkedList<Response> listOfResponses = new LinkedList<>();
 
+        class ResponseExecutor implements Runnable {
+            final Request request;
+
+            public ResponseExecutor(Request request) {
+                this.request = request;
+            }
+
+            @Override
+            public void run() {
+                final Response response = commandHandler.executeCommand(request);
+                listOfResponses.add(response);
+            }
+        }
+
+        ExecutorService executorService = Executors.newCachedThreadPool();
         while (true) {
             try {
                 serverIO.acceptAll();
@@ -73,8 +88,7 @@ public class Server {
                 //TODO вынести это в отдельный поток
                 for (Request request : listOfRequests) {
                     listOfRequests.remove(request);
-                    final Response response = commandHandler.executeCommand(request);
-                    listOfResponses.add(response);
+                    executorService.execute(new ResponseExecutor(request));
                 }
 
                 for(Response response : listOfResponses) {
