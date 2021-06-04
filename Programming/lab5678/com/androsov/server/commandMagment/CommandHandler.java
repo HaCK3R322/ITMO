@@ -48,10 +48,8 @@ public class CommandHandler {
         registryCommand(new GetCommandsFormats(this));
     }
 
-    public Response executeCommand(Request request) {
-        try {
-            history.add(request.getCommandName());
-        } catch (NullPointerException ignored) {}
+    public Response executeCommand(Request request) throws NullPointerException {
+        history.add(request.getCommandName());
         return commandMap.get(request.getCommandName()).execute(request);
     }
 

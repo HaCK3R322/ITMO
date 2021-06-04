@@ -62,12 +62,12 @@ public class Server {
         LinkedList<Request> listOfRequests = new LinkedList<>();
         LinkedList<Response> listOfResponses = new LinkedList<>();
 
-        ExecutorService executorService = Executors.newCachedThreadPool();
-
         class AsynchronizedRequestGetter implements Runnable {
             @Override
             public void run() {
-                listOfRequests.add(serverIO.get());
+                if(serverIO.hasRequest()) {
+                    listOfRequests.add(serverIO.get());
+                }
             }
         }
 
@@ -80,11 +80,14 @@ public class Server {
 
             @Override
             public void run() {
-                final Response response = commandHandler.executeCommand(request);
-                listOfResponses.add(response);
+                try {
+                    final Response response = commandHandler.executeCommand(request);
+                    listOfResponses.add(response);
+                } catch (NullPointerException ignored) {}
             }
         }
 
+        ExecutorService executorService = Executors.newCachedThreadPool();
 
         Future<?> requestGettingStatus = executorService.submit(new AsynchronizedRequestGetter());
 
@@ -93,12 +96,16 @@ public class Server {
                 serverIO.acceptAll();
 
                 if (requestGettingStatus.isDone()) {
-                    requestGettingStatus = executorService.submit(new AsynchronizedRequestGetter());
+                    if (serverIO.hasRequest()) {
+                        requestGettingStatus = executorService.submit(new AsynchronizedRequestGetter());
+                    }
                 }
 
                 final LinkedList<Request> notSentToExecutionRequests = new LinkedList<>();
-                notSentToExecutionRequests.addAll(listOfRequests);
-                listOfRequests.removeAll(notSentToExecutionRequests);
+                if(listOfRequests.size() != 0) {
+                    notSentToExecutionRequests.addAll(listOfRequests);
+                    listOfRequests.removeAll(notSentToExecutionRequests);
+                }
                 for (Request request : notSentToExecutionRequests) {
                     executorService.execute(new ResponseExecutor(request));
                 }
