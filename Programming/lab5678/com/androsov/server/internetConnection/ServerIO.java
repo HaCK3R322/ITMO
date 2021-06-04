@@ -10,10 +10,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ServerIO {
     private User currentUser;
@@ -31,7 +28,7 @@ public class ServerIO {
     }
 
     //смотрим, если он хочет зарегистрироваться, регистрируем
-    public void acceptAll() throws IOException {
+    public void acceptAll() throws IOException, CancelledKeyException {
         try { selector.select(); } catch (IOException ignored) {}
 
         final Set<SelectionKey> keys = selector.selectedKeys();
@@ -50,8 +47,24 @@ public class ServerIO {
     }
 
     //если он что-то записал, т.е. кей стал Реадабл, то возвращаем труе
-    public boolean hasRequest() {
+    public boolean hasRequest() throws ConcurrentModificationException {
 //        try { selector.select(); } catch (IOException ignored) {}
+        final Set<SelectionKey> keys = selector.selectedKeys();
+        final Iterator<SelectionKey> keyIterator = keys.iterator();
+
+        for(int i = 0; i < keys.size(); i++) {
+            final SelectionKey key = keyIterator.next();
+            if (key.isReadable()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int numberOfRequests() throws CancelledKeyException {
+        int count = 0;
+
         final Set<SelectionKey> keys = selector.selectedKeys();
         final Iterator<SelectionKey> keyIterator = keys.iterator();
 
@@ -59,19 +72,19 @@ public class ServerIO {
             try {
                 final SelectionKey key = keyIterator.next();
                 if (key.isReadable()) {
-                    return true;
+                    count++;
                 }
             } catch (CancelledKeyException ignored) {}
         }
 
-        return false;
+        return count;
     }
 
     public void setUser(User user) {
         currentUser = user;
     }
 
-    public void send(Response response) {
+    public void send(Response response) throws CancelledKeyException {
         ByteBuffer buffer = ByteBuffer.allocate(0);
         try {
             buffer = ObjectSerialization.serialize(response);
@@ -104,7 +117,7 @@ public class ServerIO {
         System.out.println("No available channels at the moment");
     }
 
-    public Request get() {
+    public Request get() throws CancelledKeyException {
         try { selector.select(); } catch (IOException ignored) {}
 
         final ByteBuffer buffer = ByteBuffer.allocate(16384);
@@ -116,12 +129,11 @@ public class ServerIO {
         for(int i = 0; i < keys.size(); i++) {
             final SelectionKey key = keyIterator.next();
             if (key.isReadable()) {
-                try {//вот сюда можно пихнуть для галочки
-
+                try {
                     ((SocketChannel)key.channel()).read(buffer);
-                    request = (Request) ObjectSerialization.deserialize(buffer);
-
                     keyIterator.remove();
+
+                    request = (Request) ObjectSerialization.deserialize(buffer);
                     break;
                 } catch (IOException e) {
                     System.out.println(e.getMessage());

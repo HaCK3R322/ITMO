@@ -16,11 +16,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StreamCorruptedException;
 import java.nio.ByteBuffer;
+import java.nio.channels.CancelledKeyException;
 import java.time.LocalDateTime;
+import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -58,6 +62,15 @@ public class Server {
         LinkedList<Request> listOfRequests = new LinkedList<>();
         LinkedList<Response> listOfResponses = new LinkedList<>();
 
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
+        class AsynchronizedRequestGetter implements Runnable {
+            @Override
+            public void run() {
+                listOfRequests.add(serverIO.get());
+            }
+        }
+
         class ResponseExecutor implements Runnable {
             final Request request;
 
@@ -72,24 +85,24 @@ public class Server {
             }
         }
 
-        ExecutorService executorService = Executors.newCachedThreadPool();
+
+        Future<?> requestGettingStatus = executorService.submit(new AsynchronizedRequestGetter());
+
         while (true) {
             try {
                 serverIO.acceptAll();
 
-                while(serverIO.hasRequest()) {
-                    final Request request = serverIO.get();
-                    if(request != null) {
-                       listOfRequests.add(request);
-                    }
+                if (requestGettingStatus.isDone()) {
+                    requestGettingStatus = executorService.submit(new AsynchronizedRequestGetter());
                 }
 
-                //обрабатываем реквесты, создаем респонсы, удаляем обработанные реквесты
-                //TODO вынести это в отдельный поток
-                for (Request request : listOfRequests) {
-                    listOfRequests.remove(request);
+                final LinkedList<Request> notSentToExecutionRequests = new LinkedList<>();
+                notSentToExecutionRequests.addAll(listOfRequests);
+                listOfRequests.removeAll(notSentToExecutionRequests);
+                for (Request request : notSentToExecutionRequests) {
                     executorService.execute(new ResponseExecutor(request));
                 }
+
 
                 for(Response response : listOfResponses) {
                     Thread sendThread = new Thread(() -> serverIO.send(response));
@@ -97,30 +110,10 @@ public class Server {
                     listOfResponses.remove(response);
                 }
 
-            } catch (StreamCorruptedException ignored) {
+            } catch (StreamCorruptedException | CancelledKeyException e) {
 
             } catch (IOException e) {
                 System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    private static class RequestGetterThread implements Runnable {
-        final LinkedList<Request> listOfRequests;
-        final Request request;
-        final ServerIO serverIO;
-
-        public RequestGetterThread(LinkedList<Request> listOfRequests, Request request, ServerIO serverIO) {
-            this.listOfRequests = listOfRequests;
-            this.request = request;
-            this.serverIO = serverIO;
-        }
-
-        @Override
-        public void run() {
-            final Request request = serverIO.get();
-            if(request != null) {
-                listOfRequests.add(request);
             }
         }
     }

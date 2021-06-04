@@ -49,7 +49,9 @@ public class CommandHandler {
     }
 
     public Response executeCommand(Request request) {
-        history.add(request.getCommandName());
+        try {
+            history.add(request.getCommandName());
+        } catch (NullPointerException ignored) {}
         return commandMap.get(request.getCommandName()).execute(request);
     }
 
