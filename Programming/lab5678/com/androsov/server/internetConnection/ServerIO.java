@@ -1,23 +1,25 @@
 package com.androsov.server.internetConnection;
 
 import com.androsov.general.IO.IO;
+import com.androsov.general.ObjectSerialization;
 import com.androsov.general.User;
+import com.androsov.general.request.Request;
+import com.androsov.general.response.Response;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
-public class ServerIO implements IO {
+public class ServerIO {
     private User currentUser;
 
     private final ServerSocketChannel serverSocketChannel;
-    private final Selector selector;
+    public final Selector selector;
 
     public ServerIO() throws IOException {
         serverSocketChannel = ServerSocketChannel.open();
@@ -49,16 +51,17 @@ public class ServerIO implements IO {
 
     //если он что-то записал, т.е. кей стал Реадабл, то возвращаем труе
     public boolean hasRequest() {
-        try { selector.select(); } catch (IOException ignored) {}
-
+//        try { selector.select(); } catch (IOException ignored) {}
         final Set<SelectionKey> keys = selector.selectedKeys();
         final Iterator<SelectionKey> keyIterator = keys.iterator();
 
         for(int i = 0; i < keys.size(); i++) {
-            final SelectionKey key = keyIterator.next();
-            if (key.isReadable()) {
-                return true;
-            }
+            try {
+                final SelectionKey key = keyIterator.next();
+                if (key.isReadable()) {
+                    return true;
+                }
+            } catch (CancelledKeyException ignored) {}
         }
 
         return false;
@@ -68,10 +71,14 @@ public class ServerIO implements IO {
         currentUser = user;
     }
 
-    //TODO отправка должна быть конкретному юзеру (создается пул из респонсов, которые содержат адрес юзера, когда можно, респонс отправляется)
-    //отправляем байты нужному юзеру
-    @Override
-    public void send(ByteBuffer buffer) {
+    public void send(Response response) {
+        ByteBuffer buffer = ByteBuffer.allocate(0);
+        try {
+            buffer = ObjectSerialization.serialize(response);
+        } catch (IOException e) {
+            System.out.println("");
+        }
+
         try { selector.select(); } catch (IOException ignored) {}
         final Set<SelectionKey> keys = selector.selectedKeys();
         final Iterator<SelectionKey> keyIterator = keys.iterator();
@@ -79,9 +86,13 @@ public class ServerIO implements IO {
         for(int i = 0; i < keys.size(); i++) {
             final SelectionKey key = keyIterator.next();
             try {
-                if (key.isWritable() && ((SocketChannel) key.channel()).getRemoteAddress().equals(currentUser.getUserAddress())) {
+
+                if (key.isWritable() && ((SocketChannel) key.channel()).getRemoteAddress().equals(response.getUser().getUserAddress())) {
                     ((SocketChannel)key.channel()).write(buffer);
+                    keyIterator.remove();
+                    return;
                 }
+
             } catch (IOException e) {
                 System.out.println(e.getMessage());
                 try {
@@ -89,15 +100,15 @@ public class ServerIO implements IO {
                     ((SocketChannel) key.channel()).socket().close();
                 } catch (IOException ignored) { }
             }
-            keyIterator.remove();
         }
+        System.out.println("No available channels at the moment");
     }
 
-    @Override
-    public ByteBuffer get() {
+    public Request get() {
         try { selector.select(); } catch (IOException ignored) {}
 
         final ByteBuffer buffer = ByteBuffer.allocate(16384);
+        Request request = null;
 
         final Set<SelectionKey> keys = selector.selectedKeys();
         final Iterator<SelectionKey> keyIterator = keys.iterator();
@@ -105,8 +116,13 @@ public class ServerIO implements IO {
         for(int i = 0; i < keys.size(); i++) {
             final SelectionKey key = keyIterator.next();
             if (key.isReadable()) {
-                try {
+                try {//вот сюда можно пихнуть для галочки
+
                     ((SocketChannel)key.channel()).read(buffer);
+                    request = (Request) ObjectSerialization.deserialize(buffer);
+
+                    keyIterator.remove();
+                    break;
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                     try {
@@ -115,9 +131,8 @@ public class ServerIO implements IO {
                     } catch (IOException ignored) {}
                 }
             }
-            keyIterator.remove();
         }
 
-        return buffer;
+        return request;
     }
 }

@@ -14,9 +14,15 @@ import com.androsov.server.productManagment.ProductBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StreamCorruptedException;
+import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class Server {
     public static void main(String[] args) throws IOException {
@@ -24,7 +30,6 @@ public class Server {
         File lab5ContentFile;
 
         ServerIO serverIO = new ServerIO();
-        IO io = serverIO;
 
         ProductBuilder productBuilder = new ProductBuilder();
         ListDeserializer deserializer = new ListDeserializer(productBuilder);
@@ -48,42 +53,62 @@ public class Server {
         MessengersHandler messengersHandler = new MessengersHandler();
 
         CommandHandler commandHandler = new CommandHandler();
+        commandHandler.init(list, messengersHandler, productBuilder, lab5ContentFile, initializationTime);
 
-        commandHandler.registryCommand(new ChangeLanguage(messengersHandler));
-        commandHandler.registryCommand(new Add(list, productBuilder, messengersHandler));
-        commandHandler.registryCommand(new AverageOfManufactureCost(list, messengersHandler));
-        commandHandler.registryCommand(new Clear(list, messengersHandler));
-        commandHandler.registryCommand(new CountByPrice(list, messengersHandler));
-        commandHandler.registryCommand(new ExecuteScript(commandHandler, messengersHandler));
-        commandHandler.registryCommand(new Help(commandHandler, messengersHandler));
-        commandHandler.registryCommand(new History(commandHandler, messengersHandler));
-        commandHandler.registryCommand(new Info(list, initializationTime, messengersHandler));
-        commandHandler.registryCommand(new RemoveById(list, messengersHandler));
-        commandHandler.registryCommand(new RemoveByManufactureCost(list, messengersHandler));
-        commandHandler.registryCommand(new RemoveFirst(list, messengersHandler));
-        commandHandler.registryCommand(new Save(list, lab5ContentFile, messengersHandler));
-        commandHandler.registryCommand(new Show(list, messengersHandler));
-        commandHandler.registryCommand(new Sort(list, messengersHandler));
-        commandHandler.registryCommand(new UpdateById(list, productBuilder, messengersHandler));
-        commandHandler.registryCommand(new Exit(messengersHandler));
-
-        commandHandler.registryCommand(new GetCommandsFormats(commandHandler));
+        LinkedList<Request> listOfRequests = new LinkedList<>();
+        LinkedList<Response> listOfResponses = new LinkedList<>();
 
         while (true) {
             try {
                 serverIO.acceptAll();
-                while (serverIO.hasRequest()) {
-                    //TODO if has request, create new thread, execute, add response to pool
-                    final Request request = (Request) ObjectSerialization.deserialize(io.get());
-                    System.out.println("Got request named " + request.getCommandName());
-                    final Response response = commandHandler.executeCommand(request);
 
-                    serverIO.setUser(response.getUser());
-                    io.send(ObjectSerialization.serialize(response));
+                while(serverIO.hasRequest()) {
+                    final Request request = serverIO.get();
+                    if(request != null) {
+                       listOfRequests.add(request);
+                    }
                 }
+
+                //обрабатываем реквесты, создаем респонсы, удаляем обработанные реквесты
+                //TODO вынести это в отдельный поток
+                for (Request request : listOfRequests) {
+                    listOfRequests.remove(request);
+                    final Response response = commandHandler.executeCommand(request);
+                    listOfResponses.add(response);
+                }
+
+                for(Response response : listOfResponses) {
+                    Thread sendThread = new Thread(() -> serverIO.send(response));
+                    sendThread.start();
+                    listOfResponses.remove(response);
+                }
+
+            } catch (StreamCorruptedException ignored) {
+
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
     }
+
+    private static class RequestGetterThread implements Runnable {
+        final LinkedList<Request> listOfRequests;
+        final Request request;
+        final ServerIO serverIO;
+
+        public RequestGetterThread(LinkedList<Request> listOfRequests, Request request, ServerIO serverIO) {
+            this.listOfRequests = listOfRequests;
+            this.request = request;
+            this.serverIO = serverIO;
+        }
+
+        @Override
+        public void run() {
+            final Request request = serverIO.get();
+            if(request != null) {
+                listOfRequests.add(request);
+            }
+        }
+    }
 }
+

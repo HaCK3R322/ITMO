@@ -5,13 +5,14 @@ import java.nio.ByteBuffer;
 public class ObjectSerialization {
     public static ByteBuffer serialize(Object object) throws IOException {
 
-        final ByteBuffer buffer;
+        ByteBuffer buffer = ByteBuffer.allocate(16384);
+        buffer.clear();
 
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
             objectOutputStream.writeObject(object);
-            objectOutputStream.flush();
-            buffer = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
+            buffer.put(byteArrayOutputStream.toByteArray());
+            buffer.position(0);
         }
 
         return buffer;
@@ -19,13 +20,14 @@ public class ObjectSerialization {
 
     public static Object deserialize(ByteBuffer buffer) throws IOException {
         Object object = null; //может быть поправить, может нет
+        buffer.position(0);
 
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(buffer.array()))
-        ) {
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buffer.array());
+             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
             try {
                 object = objectInputStream.readObject();
             } catch (ClassNotFoundException e) {
-                //ignore
+                System.out.println(e.getMessage());
             }
         }
 

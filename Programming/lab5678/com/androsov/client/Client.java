@@ -22,16 +22,22 @@ public class Client {
         IO io = clientIO;
         Ui ui;
 
+        boolean firstInit = true;
+        String serverAddress = "localhost:25565";
         while (true) {
-            String serverAddress = CommandLineInterface.askAddress();
+            if(!firstInit)
+                serverAddress = CommandLineInterface.askAddress();
+            firstInit = false;
+
             try {
                 String serverIp = serverAddress.split(":")[0];
                 int serverPort;
                 try {
                     serverPort = Integer.parseInt(serverAddress.split(":")[1]);
                 } catch (NumberFormatException e) {
-                    return;
+                    continue;
                 }
+
                 try {
                     clientIO.connectToServer(serverIp, serverPort);
                 } catch (IllegalArgumentException e) {
